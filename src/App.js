@@ -10,6 +10,7 @@ import Post from "./pages/Post";
 import SignIn from "./pages/SignIn";
 import Nav from "./components/Nav";
 import SearchResult from "./pages/SearchResult";
+import UserTest from "./pages/UserTest";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/post" Component={Post} />
         <Route path="/sign-in" Component={SignIn} />
         <Route path="/search-result" Component={SearchResult} />
+        <Route path="/user-test" Component={UserTest} />
       </Routes>
     </>
   );
