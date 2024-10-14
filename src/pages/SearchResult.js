@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import "../css/SearchResult.css";
 import "../css/MainComp.css";
 import axios from "axios";
-import { MainCompo, SelectCategory } from "../components/MainComp";
+import { MainCompo, CreateCategory } from "../components/MainComp";
 
 const SearchResult = () => {
   const location = useLocation();
@@ -47,7 +47,7 @@ const SearchResult = () => {
       <div className="board-tag">
         <div className="board-list">
           {category.map((cat) => (
-            <SelectCategory key={cat.id} category={cat} />
+            <CreateCategory key={cat.id} category={cat} />
           ))}
         </div>
       </div>

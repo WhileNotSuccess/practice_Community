@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/MainComp.css";
-import { SelectCategory } from "../components/MainComp";
+import { CreateCategory } from "../components/MainComp";
 import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
 import BackArrow from "../img/arrow_back.jpg";
@@ -16,8 +16,9 @@ const Main = () => {
   const [totalPage, setTotalPage] = useState(0); // 전체 페이지 수
   const [category, setCategory] = useState("자유게시판");
   const [h_announce, sh_announce] = useState(true);
-  const categoryList = ["자유게시판", "공지사항"];
   const [notion, setNotion] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+
   const fetchPosts = (page = 1) => {
     axios
       .get(
@@ -34,8 +35,16 @@ const Main = () => {
   };
 
   useEffect(() => {
+    categoryValue();
     fetchPosts();
-  }, [postPerPage, category]);
+  }, [category, postPerPage]);
+
+  const categoryValue = async () => {
+    await axios
+      .get(`http://localhost:8000/api/category`)
+      .then((data) => setCategoryList(data.data.data))
+      .then(console.log(categoryList));
+  };
 
   useEffect(() => {
     axios
@@ -69,10 +78,10 @@ const Main = () => {
       <div className="container">
         <div className="board-tag">
           <div className="board-list">
-            {categoryList.map((category) => (
-              <SelectCategory
-                key={category}
-                category={category}
+            {categoryList.map((data) => (
+              <CreateCategory
+                key={data.id}
+                boardName={data.boardName}
                 categoryChange={categoryChange}
               />
             ))}

@@ -13,14 +13,15 @@ export const MainCompo = (props) => {
   );
 };
 
-export const SelectCategory = ({ category, categoryChange }) => {
+export const CreateCategory = ({ boardName, categoryChange }) => {
   const CategoryButton = () => {
-    categoryChange(category);
+    categoryChange(boardName);
   };
+
   return (
     <div className="line-change">
       <span onClick={CategoryButton}>
-        {category}
+        {boardName}
         <br />
       </span>
     </div>
