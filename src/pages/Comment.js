@@ -7,21 +7,22 @@ const Comment = ({ id, reid }) => {
   const [content, sContent] = useState("");
   const [render, sRender] = useState(false);
   //댓글 수정
-  const remake = ({ id }) => {
+  const remake = (id) => {
     reid
-      ? axios.patch(
-          `http://127.0.0.1:8000/api/nested-comments?comment-id=${id}`,
-          { content: content }
-        )
-      : axios.patch(`http://127.0.0.1:8000/api/comments?post-id=${id}`, {
+      ? axios.put(`http://127.0.0.1:8000/api/nested-comments/${id}`, {
           content: content,
-        });
+        })
+      : axios
+          .put(`http://127.0.0.1:8000/api/comments/${id}`, {
+            content: content,
+          })
+          .then((res) => console.log(res));
     sContent("");
     setPostComment(0);
     sRender(!render);
   };
   //댓글 작성
-  const onComment = ({ id }) => {
+  const onComment = (id) => {
     reid
       ? axios.post(`http://127.0.0.1:8000/api/nested-comments`, {
           content: content,
@@ -35,6 +36,7 @@ const Comment = ({ id, reid }) => {
     sRender(!render);
     setPostComment(0);
   };
+
   //댓글 삭제
   const deleteComment = ({ id }) => {
     reid
@@ -73,7 +75,10 @@ const Comment = ({ id, reid }) => {
               </>
             ) : (
               <>
-                <text>{data.content}</text>
+                <text>
+                  {data.content}
+                  {data.id}
+                </text>
                 <button onClick={() => setPostComment(data.id)}>수정</button>
 
                 {reid ? null : (
