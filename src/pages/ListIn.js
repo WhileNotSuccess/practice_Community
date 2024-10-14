@@ -6,10 +6,12 @@ import { Navigate } from "react-router-dom";
 
 const ListIn = ({ id }) => {
   const [data, setdata] = useState([]);
-
+  id = 1;
   const updater = () => {};
   const deleter = () => {
-    axios.delete(`http://127.0.0.1:8000/api/posts/${id}`);
+    axios
+      .delete(`http://127.0.0.1:8000/api/posts/${id}`)
+      .then(axios.delete(`http://127.0.0.1:8000/api/comments?post-id=${id}`)); //response로 지운 comment의 id 받아올 수 있는가?
     Navigate("http://localhost:3000");
   };
   useEffect(() => {
@@ -37,7 +39,8 @@ const ListIn = ({ id }) => {
         <h3>내용</h3>
         <text>{data.content}</text>
       </div>
-      <Comment />
+      <hr />
+      <Comment id={id} />
     </div>
   );
 };
