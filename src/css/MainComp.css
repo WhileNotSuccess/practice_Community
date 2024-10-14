@@ -2,9 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-wrap: wrap;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   padding: 0 3%;
+  box-sizing: border-box;
 }
 
 .board-tag {
@@ -37,9 +39,6 @@
 }
 
 .user-login {
-  /* Frame 2 */
-
-  /* Auto layout */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -47,10 +46,8 @@
   padding: 10px;
   gap: 10px;
   margin-top: 0px;
-
   width: 80%;
   height: 50%;
-
   background: rgba(4, 74, 254, 0.2);
   box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
@@ -64,10 +61,8 @@
   padding: 10px;
   gap: 10px;
   margin-top: 10px;
-
   width: 80%;
   height: 15%;
-
   background: rgba(4, 74, 254, 0.2);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -79,9 +74,13 @@
   background: rgba(210, 223, 255, 0.2);
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
 }
 
 .line-change {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   min-height: 30px;
   border: 1px solid black;
@@ -92,10 +91,105 @@
 .options-container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  padding: 10px 0;
 }
 
 .page-select {
   width: 80px;
   margin-left: 10px;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination li a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.pagination li a:hover {
+  text-decoration: underline;
+}
+
+.pagination li.active a {
+  color: yellow;
+  text-decoration: underline;
+}
+
+.down-banner {
+  width: 100%;
+  max-width: 1440px;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(4, 74, 254, 0.3);
+  margin-top: auto;
+}
+
+.down-banner button {
+  margin: 0 10px;
+}
+
+.arrow-button {
+  border: none;
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.arrow-button img {
+  width: 20px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.options-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.options-right {
+  display: flex;
+  align-items: center;
+}
+
+.page-select {
+  margin-left: 10px;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.post-title {
+  flex: 1;
+  text-align: left;
+}
+
+.date {
+  margin-left: auto;
+}
+
+.category-name {
+  font-weight: bold;
+  font-size: 1.5em;
+  flex-grow: 1;
 }
