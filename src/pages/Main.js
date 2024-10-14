@@ -42,8 +42,7 @@ const Main = () => {
   const categoryValue = async () => {
     await axios
       .get(`http://localhost:8000/api/category`)
-      .then((data) => setCategoryList(data.data.data))
-      .then(console.log(categoryList));
+      .then((data) => setCategoryList(data.data.data));
   };
 
   useEffect(() => {
