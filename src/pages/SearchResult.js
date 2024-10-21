@@ -3,75 +3,49 @@ import { useLocation } from "react-router-dom";
 import "../css/SearchResult.css";
 import "../css/MainComp.css";
 import axios from "axios";
-import { MainCompo, CreateCategory } from "../components/MainComp";
-
+import { UserInfoCompo, CategoryCompo } from "../components/MainComp";
+import PostList from "../components/PostList";
 const SearchResult = () => {
+  const [postPerPage, setPostPerPage] = useState(10);
   const location = useLocation();
-  const { searchInput } = location.state || {};
-  const [data, setData] = useState([]);
-  const [date, setDate] = useState("");
-  const [category, setCategory] = useState([]);
+  const [resultData, setResultData] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:3001/list").then((response) => {
-      setData(response.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    axios.get("http://localhost:3001/category").then((response) => {
-      setCategory(response.data);
-    });
-  }, []);
-
-  const filteredData = data.filter(
-    (item) =>
-      item.title && item.title.toLowerCase().includes(searchInput.toLowerCase())
-  );
-
-  useEffect(() => {
-    const today = new Date();
-    setDate(
-      today
-        .toLocaleDateString("ko-kr", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })
-        .replace(/\. /g, "/")
-        .replace(/\.$/, "")
-    );
-  }, []);
-
+    axios
+      .get(
+        `http://localhost:8000/api/search?content=${location.state}&target=title`
+      )
+      .then((res) => res.data)
+      .then((data) => setResultData(data.data));
+  }, [location.state]);
+  console.log(resultData);
   return (
     <div className="container">
-      <div className="board-tag">
-        <div className="board-list">
-          {category.map((cat) => (
-            <CreateCategory key={cat.id} category={cat} />
-          ))}
+      <div className="post-list">
+        <div className="options-container">
+          <div className="category-name">검색 결과</div>
+          <div className="options-right">
+            <select
+              className="page-select"
+              value={postPerPage}
+              onChange={(e) => {
+                setPostPerPage(Number(e.target.value));
+              }}
+            >
+              <option value={10}>10개씩</option>
+              <option value={20}>20개씩</option>
+              <option value={30}>30개씩</option>
+            </select>
+          </div>
+
+          <div className="post-header">
+            <span className="post-title">글 제목</span>
+            <span className="post-date">작성일자</span>
+          </div>
+          <hr />
+          {resultData.length > 0 ? <PostList list={resultData} /> : null}
         </div>
       </div>
-      <div className="post-list">
-        <h1>검색 결과</h1>
-        <ul>
-          {filteredData.length > 0 && searchInput.length > 0 ? (
-            filteredData.map((item) => (
-              <MainCompo
-                key={item.id}
-                title={item.title}
-                category={item.category}
-                date={date}
-              />
-            ))
-          ) : (
-            <p>검색 결과가 없습니다.</p>
-          )}
-        </ul>
-      </div>
-      <div className="user-info">
-        <div className="user-login"></div>
-        <div className="logout-btn"></div>
-      </div>
+      <UserInfoCompo />
     </div>
   );
 };
