@@ -13,7 +13,7 @@ const Nav = () => {
   const onSearch = (e) => {
     e.preventDefault()
     const content = searchInput.split(' ')
-    axios.get(`http://localhost:8000/api/search?target=tile&content=${content.join('-')}&category=자유게시판`)
+    axios.get(`http://localhost:8000/api/search?target=title&content=${content.join('-')}&category=자유게시판&limit=20`)
     .then(res=>console.log(res.data))
     .catch((e)=>console.log(e.response.data.message))
   }; /*  */
