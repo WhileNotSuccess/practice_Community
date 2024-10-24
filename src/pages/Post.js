@@ -53,8 +53,9 @@ const Post = () => {
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  const { user } = useAuth({ middleware: "auth" });
+  const { user } = useAuth();
   const { logout } = useAuth();
   /*   const csrfToken = document
     .querySelector('meta[name="csrf-token"]')
@@ -66,6 +67,19 @@ const Post = () => {
       setPostCategory(res.data);
     });
   }, []); */
+
+  useEffect(() => {
+    if (user === undefined) {
+      return;
+    }
+
+    if (!user) {
+      alert("로그인후 이용하세요");
+      navigate("/login");
+    } else {
+      setLoading(false);
+    }
+  }, [user, navigate]);
 
   const adapter = (editorInstance) => {
     editorInstance.plugins.get("FileRepository").createUploadAdapter = (
@@ -120,6 +134,11 @@ const Post = () => {
         console.error("실패했습니다", error);
       });
   };
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
+
   return (
     <div className="post-board">
       <div className="board-tag">
