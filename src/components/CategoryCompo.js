@@ -1,0 +1,35 @@
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { CreateCategory } from "../components/MainComp";
+export const CategoryCompo = () => {
+  const dispatch = useDispatch();
+  const categoryList = useSelector((state) => state.categoryList);
+
+  const fetchCategories = async () => {
+    const { data } = await axios.get("http://localhost:8000/api/category");
+    dispatch({ type: "CATEGORYLIST_UPLOAD", payload: data.data });
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, [dispatch]);
+
+  const categoryChange = (category) => {
+    dispatch({ type: "CATEGORY_CHANGE", payload: category });
+  };
+
+  return (
+    <div className="board-tag">
+      <div className="board-list">
+        {categoryList.map((data) => (
+          <CreateCategory
+            key={data.id}
+            boardName={data.boardName}
+            categoryChange={categoryChange}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};

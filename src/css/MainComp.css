@@ -193,3 +193,18 @@
   font-size: 1.5em;
   flex-grow: 1;
 }
+
+.down-rectangle {
+  display: flex;
+  width: 50%;
+  height: 7vh;
+  justify-content: flex-start;
+  align-items: center;
+  background: rgba(4, 74, 254, 0.5);
+  border-radius: 8px;
+  margin-left: 25%;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}

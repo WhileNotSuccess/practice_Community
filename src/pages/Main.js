@@ -1,54 +1,47 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/MainComp.css";
-import { CreateCategory, UserInfoCompo } from "../components/MainComp";
+import { CategoryCompo } from "../components/CategoryCompo";
+import { UserInfoCompo } from "../components/MainComp";
 import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
-import BackArrow from "../img/arrow_back.jpg";
-import ForwardArrow from "../img/arrow_forward.jpg";
-import { Link } from "react-router-dom";
-import { CategoryCompo } from "../components/MainComp";
+import searchIcon from "../img/search.jpg";
+import { useDispatch, useSelector } from "react-redux";
 
 const Main = () => {
+  const dispatch = useDispatch();
+  const category = useSelector((state) => state.category);
+  const currentPage = useSelector((state) => state.currentPage);
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  /* const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 */
+  /* const nextPage = useSelector((state) => state.nextPage); // 이전 페이지 */
   const [nextPage, setNextPage] = useState("");
-  const [prevPage, setPrevPage] = useState("");
+  const [prevPage, setPrevPage] = useState(""); // 다음 페이지
   const [postPerPage, setPostPerPage] = useState(10);
   const [totalPage, setTotalPage] = useState(0);
-  const [category, setCategory] = useState("자유게시판");
   const [h_announce, setHAnnounce] = useState(true);
   const [notion, setNotion] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
-
-  const fetchPosts = async (page = 1) => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}`
-      );
-      setPosts(data.data);
-      setCurrentPage(data.currentPage);
-      setNextPage(data.nextPage);
-      setPrevPage(data.prevPage);
-      setTotalPage(data.totalPage);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
+  const [downSearchInput, setDownSearchInput] = useState("");
+  const fetchPosts = async (page) => {
+    const { data } = await axios.get(
+      `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}`
+    );
+    setPosts(data.data);
+    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setNextPage(data.nextPage);
+    setPrevPage(data.prevPage);
+    setTotalPage(data.totalPage);
   };
 
   const fetchNotions = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:8000/api/posts?category=공지사항&limit=2`
-      );
-      setNotion(data.data);
-    } catch (error) {
-      console.error("Error fetching notions:", error);
-    }
+    const { data } = await axios.get(
+      `http://localhost:8000/api/posts?category=공지사항&limit=2`
+    );
+    setNotion(data.data);
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(currentPage);
   }, [category, postPerPage]);
 
   useEffect(() => {
@@ -58,7 +51,7 @@ const Main = () => {
   const pageChange = async (url) => {
     const { data } = await axios.get(url);
     setPosts(data.data);
-    setCurrentPage(data.currentPage);
+    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
     setNextPage(data.nextPage);
     setPrevPage(data.prevPage);
     setTotalPage(data.totalPage);
@@ -68,18 +61,12 @@ const Main = () => {
     fetchPosts(pageNumber);
   };
 
-  const categoryChange = (category) => {
-    setCategory(category);
+  const onChange = (e) => {
+    setDownSearchInput(e.target.value);
   };
-
   return (
     <div className="container">
-      <CategoryCompo
-        category={category}
-        categoryChange={categoryChange}
-        categoryList={categoryList}
-        setCategoryList={setCategoryList}
-      />
+      <CategoryCompo />
 
       <div className="post-list">
         <div className="options-container">
@@ -114,27 +101,32 @@ const Main = () => {
         {posts.length > 0 && <PostList list={posts} />}
       </div>
       <UserInfoCompo />
-      <div className="down-banner">
-        <button
-          className="arrow-button"
-          onClick={() => pageChange(`${prevPage}&limit=${postPerPage}`)}
-          disabled={!prevPage}
-        >
-          <img src={BackArrow} alt="Previous" />
+      <div className="down-rectangle">
+        <select>
+          <option>제목</option>
+          <option>내용</option>
+          <option>작성자</option>
+        </select>
+        <input
+          className="search-box"
+          placeholder="내용을 입력하세요."
+          value={downSearchInput}
+          onChange={onChange}
+        />
+        <button className="search-icon">
+          <img src={searchIcon} alt="" />
         </button>
+      </div>
+      <div className="down-banner">
         <Pagination
           postPerPage={postPerPage}
           totalPage={totalPage}
           paginate={paginate}
           currentPage={currentPage}
+          prevPage={prevPage}
+          nextPage={nextPage}
+          pageChange={pageChange}
         />
-        <button
-          className="arrow-button"
-          onClick={() => pageChange(`${nextPage}&limit=${postPerPage}`)}
-          disabled={!nextPage}
-        >
-          <img src={ForwardArrow} alt="Next" />
-        </button>
       </div>
     </div>
   );
