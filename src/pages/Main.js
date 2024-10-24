@@ -7,14 +7,14 @@ import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
 import searchIcon from "../img/search.jpg";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Navigate, useNavigate } from "react-router-dom";
 const Main = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const category = useSelector((state) => state.category);
   const currentPage = useSelector((state) => state.currentPage);
+  const target = useSelector((state) => state.target);
   const [posts, setPosts] = useState([]);
-  /* const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 */
-  /* const nextPage = useSelector((state) => state.nextPage); // 이전 페이지 */
   const [nextPage, setNextPage] = useState("");
   const [prevPage, setPrevPage] = useState(""); // 다음 페이지
   const [postPerPage, setPostPerPage] = useState(10);
@@ -22,6 +22,7 @@ const Main = () => {
   const [h_announce, setHAnnounce] = useState(true);
   const [notion, setNotion] = useState([]);
   const [downSearchInput, setDownSearchInput] = useState("");
+
   const fetchPosts = async (page) => {
     const { data } = await axios.get(
       `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}`
@@ -64,6 +65,16 @@ const Main = () => {
   const onChange = (e) => {
     setDownSearchInput(e.target.value);
   };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      downSearchInput == ""
+        ? alert("내용을 입력해주세요.")
+        : navigate("/search-result", {
+            state: { searchInput: downSearchInput, target: target },
+          });
+    }
+  };
   return (
     <div className="container">
       <CategoryCompo />
@@ -93,6 +104,7 @@ const Main = () => {
         </div>
         <div className="post-header">
           <span className="post-title">글 제목</span>
+          <span className="post-user">작성자</span>
           <span className="post-date">작성일자</span>
         </div>
         <hr />
@@ -102,16 +114,23 @@ const Main = () => {
       </div>
       <UserInfoCompo />
       <div className="down-rectangle">
-        <select>
-          <option>제목</option>
-          <option>내용</option>
-          <option>작성자</option>
+        <select
+          className="select-target"
+          value={target}
+          onChange={(e) =>
+            dispatch({ type: "TARGET_CHANGE", payload: e.target.value })
+          }
+        >
+          <option value={"title"}>제목</option>
+          <option value={"content"}>내용</option>
+          <option value={"author"}>작성자</option>
         </select>
         <input
           className="search-box"
           placeholder="내용을 입력하세요."
           value={downSearchInput}
           onChange={onChange}
+          onKeyUp={handleKeyPress}
         />
         <button className="search-icon">
           <img src={searchIcon} alt="" />

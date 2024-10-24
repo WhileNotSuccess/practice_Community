@@ -11,16 +11,17 @@ import { useDispatch, useSelector } from "react-redux";
 const SearchResult = () => {
   const [postPerPage, setPostPerPage] = useState(10);
   const location = useLocation();
+  const { searchInput, target } = location.state;
   const currentPage = useSelector((state) => state.currentPage);
+
   const [resultData, setResultData] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [prevPage, setPrevPage] = useState("");
   const [nextPage, setNextPage] = useState("");
-
   const dispatch = useDispatch();
   const fetchResult = async (page) => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/search?content=${location.state}&target=title&limit=${postPerPage}&page=${page}`
+      `http://localhost:8000/api/search?content=${searchInput}&target=${target}&limit=${postPerPage}&page=${page}`
     );
     setResultData(data.data);
     setTotalPage(data.totalPage);
@@ -31,8 +32,7 @@ const SearchResult = () => {
   };
   useEffect(() => {
     fetchResult(currentPage);
-    console.log(totalPage);
-  }, [location.state, postPerPage]);
+  }, [postPerPage]);
 
   const pageChange = async (url) => {
     const { data } = await axios.get(url);

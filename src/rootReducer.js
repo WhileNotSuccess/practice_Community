@@ -6,6 +6,7 @@ const initialState = {
   nextPage: "",
   postPerPage: 10,
   totalPage: 0,
+  target: "title",
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -24,6 +25,8 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, postPerPage: action.payload };
     case "TOTALPAGE_CHANGE":
       return { ...state, totalpage: action.payload };
+    case "TARGET_CHANGE":
+      return { ...state, target: action.payload };
     default:
       return state;
   }

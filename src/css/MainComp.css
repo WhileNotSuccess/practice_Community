@@ -183,8 +183,10 @@
   flex: 1;
   text-align: left;
 }
-
-.date {
+.user-value {
+  margin-left: 43%;
+}
+.post-date {
   margin-left: auto;
 }
 
@@ -207,4 +209,19 @@
   margin-top: 20px;
   margin-bottom: 10px;
   padding: 0 10px;
+}
+
+.post-user {
+  margin-right: 25%;
+}
+
+.select-target {
+  background-color: #f0f0f0;
+  display: inline-block;
+  height: 75%;
+  padding: 12px;
+  border: 2px;
+  border-radius: 12px;
+  font-size: 13px;
+  background-color: #fff;
 }
