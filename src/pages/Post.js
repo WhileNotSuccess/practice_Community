@@ -1,12 +1,7 @@
 import React from "react";
-import DownSearch from "../components/DownSearch";
 
 const Post = () => {
-  return (
-    <>
-      <DownSearch />
-    </>
-  );
+  return <div>Post</div>;
 };
 
 export default Post;
