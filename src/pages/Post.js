@@ -68,19 +68,6 @@ const Post = () => {
     });
   }, []); */
 
-  useEffect(() => {
-    if (user === undefined) {
-      return;
-    }
-
-    if (!user) {
-      alert("로그인후 이용하세요");
-      navigate("/login");
-    } else {
-      setLoading(false);
-    }
-  }, [user, navigate]);
-
   const adapter = (editorInstance) => {
     editorInstance.plugins.get("FileRepository").createUploadAdapter = (
       loader
