@@ -53,20 +53,8 @@ const Post = () => {
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
-  const { logout } = useAuth();
-  /*   const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
-
-  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken; */
-  /*   useEffect(() => {
-    axios.get("http://localhost:8000/category").then((res) => {
-      setPostCategory(res.data);
-    });
-  }, []); */
 
   const adapter = (editorInstance) => {
     editorInstance.plugins.get("FileRepository").createUploadAdapter = (
@@ -74,14 +62,6 @@ const Post = () => {
     ) => {
       return new MyUploadAdapter(loader);
     };
-  };
-
-  const GoToLogin = () => {
-    navigate("/login");
-  };
-
-  const GoToSignIn = () => {
-    navigate("/sign-in");
   };
 
   const GoToMain = () => {
@@ -121,10 +101,6 @@ const Post = () => {
         console.error("실패했습니다", error);
       });
   };
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
 
   return (
     <div className="post-board">
