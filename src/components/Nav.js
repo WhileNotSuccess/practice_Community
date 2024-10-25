@@ -4,7 +4,6 @@ import "../css/Nav.css";
 import { Link, useNavigate } from "react-router-dom";
 import "../App";
 import searchIcon from "../img/search.jpg";
-import { useSelector } from "react-redux";
 
 const Nav = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -13,13 +12,16 @@ const Nav = () => {
   const onChange = (e) => {
     setSearchInput(e.target.value);
   };
+  const inputExist = () => {
+    searchInput == ""
+      ? alert("내용을 입력해주세요.")
+      : navigate("/search-result", {
+          state: { searchInput: searchInput, category: "자유게시판" },
+        });
+  };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      searchInput == ""
-        ? alert("내용을 입력해주세요.")
-        : navigate("/search-result", {
-            state: { searchInput: searchInput, category: "자유게시판" },
-          });
+      inputExist();
     }
   };
 
@@ -36,7 +38,7 @@ const Nav = () => {
             onChange={onChange}
             onKeyUp={handleKeyPress}
           />
-          <button className="search-icon">
+          <button className="search-icon" onClick={inputExist}>
             <img src={searchIcon} alt="" />
           </button>
         </div>

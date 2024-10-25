@@ -7,25 +7,30 @@ import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
 import searchIcon from "../img/search.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import DownSearch from "../components/DownSearch";
+
 const Main = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const category = useSelector((state) => state.category);
-  const currentPage = useSelector((state) => state.currentPage);
-  const target = useSelector((state) => state.target);
-  const [posts, setPosts] = useState([]);
-  const [nextPage, setNextPage] = useState("");
-  const [prevPage, setPrevPage] = useState(""); // 다음 페이지
-  const [postPerPage, setPostPerPage] = useState(10);
-  const [totalPage, setTotalPage] = useState(0);
-  const [h_announce, setHAnnounce] = useState(true);
-  const [notion, setNotion] = useState([]);
-  const [downSearchInput, setDownSearchInput] = useState("");
+  const category = useSelector((state) => state.category); // 카테고리
+  const currentPage = useSelector((state) => state.currentPage); // 현재 페이지
+  const target = useSelector((state) => state.target); // 검색 주제(제목, 내용, 작성자)
+  const [posts, setPosts] = useState([]); // 메인에서 글 가져오기
+  const [nextPage, setNextPage] = useState(""); // 다음 페이지
+  const [prevPage, setPrevPage] = useState(""); // 이전 페이지
+  const [postPerPage, setPostPerPage] = useState(10); // 페이지에 띄울 글 갯수
+  const [totalPage, setTotalPage] = useState(0); // 총 페이지
+  const [h_announce, setHAnnounce] = useState(true); // 공지 숨기기
+  const [notion, setNotion] = useState([]); // 공지내용 가져오기
+  const [downSearchInput, setDownSearchInput] = useState(""); // 하단 검색창
+  const [searchInput, setSearchInput] = useState(downSearchInput); // 검색 입력값
 
   const fetchPosts = async (page) => {
+    // 메인 페이지 글 가져오기
     const { data } = await axios.get(
-      `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}`
+      `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}
+    `
     );
     setPosts(data.data);
     dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
@@ -35,21 +40,34 @@ const Main = () => {
   };
 
   const fetchNotions = async () => {
+    // 공지사항 글 가져오기
     const { data } = await axios.get(
-      `http://localhost:8000/api/posts?category=공지사항&limit=2`
+      `http://localhost:8000/api/posts?category=공지사항&limit=2
+    `
     );
     setNotion(data.data);
   };
 
   useEffect(() => {
-    fetchPosts(currentPage);
+    // 게시판이나 글 갯수 조정 시에 1페이지로 조정
+    fetchPosts(1);
   }, [category, postPerPage]);
 
   useEffect(() => {
+    // 공지 글 로딩
     fetchNotions();
-  }, []);
+  }, [notion]);
+
+  useEffect(() => {
+    if (searchInput) {
+      navigate("/search-result", {
+        state: { searchInput, target },
+      });
+    }
+  }, [searchInput]);
 
   const pageChange = async (url) => {
+    // 페이지 변경 시 데이터 로딩
     const { data } = await axios.get(url);
     setPosts(data.data);
     dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
@@ -59,26 +77,33 @@ const Main = () => {
   };
 
   const paginate = (pageNumber) => {
+    // 페이지값 변경
     fetchPosts(pageNumber);
   };
 
   const onChange = (e) => {
+    // 하단 검색창 onChange
     setDownSearchInput(e.target.value);
   };
 
   const handleKeyPress = (e) => {
+    //enter키 구현
     if (e.key === "Enter") {
-      downSearchInput == ""
-        ? alert("내용을 입력해주세요.")
-        : navigate("/search-result", {
-            state: { searchInput: downSearchInput, target: target },
-          });
+      inputExist();
     }
   };
+
+  const inputExist = () => {
+    if (downSearchInput === "") {
+      alert("내용을 입력해주세요.");
+    } else {
+      setSearchInput(downSearchInput); // 검색 입력값 상태 업데이트
+    }
+  };
+
   return (
     <div className="container">
       <CategoryCompo />
-
       <div className="post-list">
         <div className="options-container">
           <div className="category-name">{category}</div>
@@ -107,35 +132,12 @@ const Main = () => {
           <span className="post-user">작성자</span>
           <span className="post-date">작성일자</span>
         </div>
-        <hr />
         {notion.length > 0 && !h_announce && <PostList list={notion} />}
-        <hr />
         {posts.length > 0 && <PostList list={posts} />}
       </div>
       <UserInfoCompo />
-      <div className="down-rectangle">
-        <select
-          className="select-target"
-          value={target}
-          onChange={(e) =>
-            dispatch({ type: "TARGET_CHANGE", payload: e.target.value })
-          }
-        >
-          <option value={"title"}>제목</option>
-          <option value={"content"}>내용</option>
-          <option value={"author"}>작성자</option>
-        </select>
-        <input
-          className="search-box"
-          placeholder="내용을 입력하세요."
-          value={downSearchInput}
-          onChange={onChange}
-          onKeyUp={handleKeyPress}
-        />
-        <button className="search-icon">
-          <img src={searchIcon} alt="" />
-        </button>
-      </div>
+      <DownSearch />
+
       <div className="down-banner">
         <Pagination
           postPerPage={postPerPage}
