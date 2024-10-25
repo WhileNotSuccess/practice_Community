@@ -161,7 +161,9 @@ const Post = () => {
           </select>
           <input placeholder="제목" onChange={titlechange}></input>
         </div>
-        <div className="user-name">유저명</div>
+        <div className="user-name">
+          <>작성자 : {user.nick_name}</>
+        </div>
         <div className="content-write">
           <div className="ckeditor">
             <CKEditor
