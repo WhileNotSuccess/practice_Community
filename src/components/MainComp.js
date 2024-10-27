@@ -29,6 +29,14 @@ export const CreateCategory = ({ boardName, categoryChange }) => {
   );
 };
 
+export const UserInfoCompo = () => {
+  return (
+    <div className="user-info">
+      <div className="user-login"></div>
+      <Link to="/login" className="logout-btn">
+        로그인
+      </Link>)
+    }
 export const UserInfoCompo = (props) => {
   return (
     <div className="user-info">

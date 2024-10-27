@@ -1,14 +1,33 @@
 /* Nav.js */
-import { React, useState } from "react";
+import { React, useState, KeyboardEvent } from "react";
 import "../css/Nav.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "../App";
 import searchIcon from "../img/search.jpg";
+import { useDispatch } from "react-redux";
 import axios from '../lib/axios'
+
 const Nav = () => {
   const [searchInput, setSearchInput] = useState("");
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const onChange = (e) => {
     setSearchInput(e.target.value);
+  };
+  const inputExist = () => {
+    if (searchInput == "") {
+      alert("내용을 입력해주세요.");
+    } else {
+      dispatch({ type: "TARGET_CHANGE", payload: "title" });
+      navigate("/search-result", {
+        state: { searchInput: searchInput },
+      });
+    }
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      inputExist();
+    }
   };
   const onSearch = (e) => {
     e.preventDefault()
@@ -21,9 +40,8 @@ const Nav = () => {
   return (
     <div className="parent">
       <div className="header">
-        <Link to="/">
-          <div className="logo"></div>
-        </Link>
+        <Link to="/" className="logo"></Link>
+
         <div className="rectangle">
           <form onSubmit={onSearch}>
           <input
@@ -31,14 +49,12 @@ const Nav = () => {
             placeholder="내용을 입력하세요."
             value={searchInput}
             onChange={onChange}
+            onKeyUp={handleKeyPress}
           />
+          <button className="search-icon" onClick={inputExist}>
+            <img src={searchIcon} alt="" />
+          </button>
           </form>
-          
-          <Link to="/search-result" state={{ searchInput: searchInput }}>
-            <button className="search-icon">
-              <img src={searchIcon} alt="" />
-            </button>
-          </Link>
         </div>
       </div>
       <div className="banner"></div>

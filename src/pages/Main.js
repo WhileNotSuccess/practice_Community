@@ -1,158 +1,155 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/MainComp.css";
-import { CreateCategory } from "../components/MainComp";
+import { CategoryCompo } from "../components/CategoryCompo";
+import { UserInfoCompo } from "../components/MainComp";
 import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
-import BackArrow from "../img/arrow_back.jpg";
-import ForwardArrow from "../img/arrow_forward.jpg";
+import searchIcon from "../img/search.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import DownSearch from "../components/DownSearch";
 
 const Main = () => {
-  const [posts, setPosts] = useState([]); // 불러온 게시글 목록
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 (기본값 1로 설정)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const category = useSelector((state) => state.category); // 카테고리
+  const currentPage = useSelector((state) => state.currentPage); // 현재 페이지
+  const target = useSelector((state) => state.target); // 검색 주제(제목, 내용, 작성자)
+  const [posts, setPosts] = useState([]); // 메인에서 글 가져오기
   const [nextPage, setNextPage] = useState(""); // 다음 페이지
   const [prevPage, setPrevPage] = useState(""); // 이전 페이지
-  const [postPerPage, setPostPerPage] = useState(10); // 페이지마다 띄울 게시글 갯수
-  const [totalPage, setTotalPage] = useState(0); // 전체 페이지 수
-  const [category, setCategory] = useState("자유게시판");
-  const [h_announce, sh_announce] = useState(true);
-  const [notion, setNotion] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
+  const [postPerPage, setPostPerPage] = useState(10); // 페이지에 띄울 글 갯수
+  const [totalPage, setTotalPage] = useState(0); // 총 페이지
+  const [h_announce, setHAnnounce] = useState(true); // 공지 숨기기
+  const [notion, setNotion] = useState([]); // 공지내용 가져오기
+  const [downSearchInput, setDownSearchInput] = useState(""); // 하단 검색창
+  const [searchInput, setSearchInput] = useState(downSearchInput); // 검색 입력값
 
-  const fetchPosts = (page = 1) => {
-    axios
-      .get(
-        `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}`
-      )
-      .then((res) => res.data)
-      .then((data) => {
-        setPosts(data.data);
-        setCurrentPage(data.currentPage);
-        setNextPage(data.nextPage);
-        setPrevPage(data.prevPage);
-        setTotalPage(data.totalPage);
-      });
+  const fetchPosts = async (page) => {
+    // 메인 페이지 글 가져오기
+    const { data } = await axios.get(
+      `http://localhost:8000/api/posts?category=${category}&limit=${postPerPage}&page=${page}
+    `
+    );
+    setPosts(data.data);
+    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setNextPage(data.nextPage);
+    setPrevPage(data.prevPage);
+    setTotalPage(data.totalPage);
+  };
+
+  const fetchNotions = async () => {
+    // 공지사항 글 가져오기
+    const { data } = await axios.get(
+      `http://localhost:8000/api/posts?category=공지사항&limit=2
+    `
+    );
+    setNotion(data.data);
   };
 
   useEffect(() => {
-    categoryValue();
-    fetchPosts();
+    // 게시판이나 글 갯수 조정 시에 1페이지로 조정
+    fetchPosts(1);
   }, [category, postPerPage]);
 
-  const categoryValue = async () => {
-    await axios
-      .get(`http://localhost:8000/api/category`)
-      .then((data) => setCategoryList(data.data.data));
-  };
+  useEffect(() => {
+    // 공지 글 로딩
+    fetchNotions();
+  }, [notion]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/posts?category=공지사항&limit=2`)
-      .then((notion) => setNotion(notion.data.data));
-  }, []);
-
-  const pageChange = (url) => {
-    axios
-      .get(url)
-      .then((res) => res.data)
-      .then((data) => {
-        setPosts(data.data);
-        setCurrentPage(data.currentPage);
-        setNextPage(data.nextPage);
-        setPrevPage(data.prevPage);
-        setTotalPage(data.totalPage);
+    if (searchInput) {
+      navigate("/search-result", {
+        state: { searchInput, target },
       });
+    }
+  }, [searchInput]);
+
+  const pageChange = async (url) => {
+    // 페이지 변경 시 데이터 로딩
+    const { data } = await axios.get(url);
+    setPosts(data.data);
+    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setNextPage(data.nextPage);
+    setPrevPage(data.prevPage);
+    setTotalPage(data.totalPage);
   };
 
   const paginate = (pageNumber) => {
+    // 페이지값 변경
     fetchPosts(pageNumber);
   };
 
-  const categoryChange = (category) => {
-    setCategory(category);
+  const onChange = (e) => {
+    // 하단 검색창 onChange
+    setDownSearchInput(e.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    //enter키 구현
+    if (e.key === "Enter") {
+      inputExist();
+    }
+  };
+
+  const inputExist = () => {
+    if (downSearchInput === "") {
+      alert("내용을 입력해주세요.");
+    } else {
+      setSearchInput(downSearchInput); // 검색 입력값 상태 업데이트
+    }
   };
 
   return (
-    <>
-      <div className="container">
-        <div className="board-tag">
-          <div className="board-list">
-            {categoryList.map((data) => (
-              <CreateCategory
-                key={data.id}
-                boardName={data.boardName}
-                categoryChange={categoryChange}
+    <div className="container">
+      <CategoryCompo />
+      <div className="post-list">
+        <div className="options-container">
+          <div className="category-name">{category}</div>
+          <div className="options-right">
+            <form onClick={() => setHAnnounce(!h_announce)}>
+              <input
+                type="checkbox"
+                checked={h_announce}
+                onChange={() => setHAnnounce(!h_announce)}
               />
-            ))}
+              공지숨기기
+            </form>
+            <select
+              value={postPerPage}
+              onChange={(e) => setPostPerPage(Number(e.target.value))}
+              className="page-select"
+            >
+              <option value={10}>10개씩</option>
+              <option value={20}>20개씩</option>
+              <option value={30}>30개씩</option>
+            </select>
           </div>
         </div>
-        <div className="post-list">
-          <div className="options-container">
-            <div className="category-name">{category}</div>
-
-            <div className="options-right">
-              <form
-                onClick={() => {
-                  sh_announce(!h_announce);
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={h_announce}
-                  onChange={() => sh_announce(!h_announce)}
-                />
-                공지숨기기
-              </form>
-              <select
-                value={postPerPage}
-                onChange={(e) => setPostPerPage(Number(e.target.value))}
-                className="page-select"
-              >
-                <option value={10}>10개씩</option>
-                <option value={20}>20개씩</option>
-                <option value={30}>30개씩</option>
-              </select>
-            </div>
-          </div>
-          <div className="post-header">
-            <span className="post-title">글 제목</span>
-            <span className="post-date">작성일자</span>
-          </div>
-          <hr />
-          {notion.length > 0 && !h_announce ? <PostList list={notion} /> : null}
-
-          <hr />
-
-          {posts.length > 0 ? <PostList list={posts} /> : null}
+        <div className="post-header">
+          <span className="post-title">글 제목</span>
+          <span className="post-user">작성자</span>
+          <span className="post-date">작성일자</span>
         </div>
-        <div className="user-info">
-          <div className="user-login"></div>
-          <div className="logout-btn"></div>
-        </div>
+        {notion.length > 0 && !h_announce && <PostList list={notion} />}
+        {posts.length > 0 && <PostList list={posts} />}
       </div>
+      <UserInfoCompo />
+      <DownSearch />
+
       <div className="down-banner">
-        <button
-          className="arrow-button"
-          onClick={() => pageChange(`${prevPage}&limit=${postPerPage}`)}
-          disabled={!prevPage}
-        >
-          <img src={BackArrow} alt="Previous" />
-        </button>
         <Pagination
           postPerPage={postPerPage}
           totalPage={totalPage}
           paginate={paginate}
           currentPage={currentPage}
+          prevPage={prevPage}
+          nextPage={nextPage}
+          pageChange={pageChange}
         />
-        <button
-          className="arrow-button"
-          onClick={() => pageChange(`${nextPage}&limit=${postPerPage}`)}
-          disabled={!nextPage}
-        >
-          <img src={ForwardArrow} alt="Next" />
-        </button>
       </div>
-    </>
+    </div>
   );
 };
 
