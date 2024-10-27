@@ -128,13 +128,14 @@
 
 .down-banner {
   width: 100%;
-  max-width: 2490px;
   height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(4, 74, 254, 0.3);
-  margin-top: auto;
+  margin: 0;
+  padding: 0;
+  position: relative;
 }
 
 .down-banner button {
@@ -183,8 +184,16 @@
   flex: 1;
   text-align: left;
 }
+
 .user-value {
   margin-left: 43%;
+}
+
+.post-user {
+  margin-right: 15%;
+}
+.search-post-user {
+  margin-right: 25%;
 }
 .post-date {
   margin-left: auto;
@@ -198,30 +207,53 @@
 
 .down-rectangle {
   display: flex;
-  width: 50%;
-  height: 7vh;
-  justify-content: flex-start;
   align-items: center;
+  width: 100%;
+  max-width: 600px;
+  height: 7vh;
   background: rgba(4, 74, 254, 0.5);
   border-radius: 8px;
-  margin-left: 25%;
-  margin-right: auto;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 20px auto;
   padding: 0 10px;
 }
 
-.post-user {
-  margin-right: 25%;
+.select-target {
+  background-color: #ffffff;
+  height: 75%;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  margin-right: 10px;
 }
 
-.select-target {
-  background-color: #f0f0f0;
-  display: inline-block;
-  height: 75%;
-  padding: 12px;
-  border: 2px;
-  border-radius: 12px;
-  font-size: 13px;
-  background-color: #fff;
+.down-search-box {
+  flex-grow: 1;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  max-height: 100%;
+}
+
+.search-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.search-icon img {
+  width: 100%;
+  height: auto;
+}
+
+.down-search-box:focus {
+  outline: none;
 }

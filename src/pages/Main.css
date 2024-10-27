@@ -92,9 +92,6 @@
 }
 
 .user-login {
-  /* Frame 2 */
-
-  /* Auto layout */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -129,8 +126,6 @@
 }
 
 .post-list {
-  /* 게시글 그룹 */
-
   position: absolute;
   width: 856px;
   height: 630px;

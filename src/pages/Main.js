@@ -49,14 +49,13 @@ const Main = () => {
   };
 
   useEffect(() => {
-    // 게시판이나 글 갯수 조정 시에 1페이지로 조정
-    fetchPosts(1);
+    fetchPosts(1); // 카테고리 변경 시 1페이지 데이터 로딩
   }, [category, postPerPage]);
 
   useEffect(() => {
     // 공지 글 로딩
     fetchNotions();
-  }, [notion]);
+  }, []);
 
   useEffect(() => {
     if (searchInput) {
@@ -64,41 +63,22 @@ const Main = () => {
         state: { searchInput, target },
       });
     }
-  }, [searchInput]);
+  }, [searchInput]); // 검색 입력값이 있을 때만 이동
 
   const pageChange = async (url) => {
-    // 페이지 변경 시 데이터 로딩
-    const { data } = await axios.get(url);
-    setPosts(data.data);
-    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
-    setNextPage(data.nextPage);
-    setPrevPage(data.prevPage);
-    setTotalPage(data.totalPage);
+    if (url) {
+      const { data } = await axios.get(url);
+      setPosts(data.data);
+      dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+      setNextPage(data.nextPage);
+      setPrevPage(data.prevPage);
+      setTotalPage(data.totalPage);
+    }
   };
 
   const paginate = (pageNumber) => {
     // 페이지값 변경
     fetchPosts(pageNumber);
-  };
-
-  const onChange = (e) => {
-    // 하단 검색창 onChange
-    setDownSearchInput(e.target.value);
-  };
-
-  const handleKeyPress = (e) => {
-    //enter키 구현
-    if (e.key === "Enter") {
-      inputExist();
-    }
-  };
-
-  const inputExist = () => {
-    if (downSearchInput === "") {
-      alert("내용을 입력해주세요.");
-    } else {
-      setSearchInput(downSearchInput); // 검색 입력값 상태 업데이트
-    }
   };
 
   return (

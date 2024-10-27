@@ -70,6 +70,7 @@ const SearchResult = () => {
         </div>
         <div className="post-header">
           <span className="post-title">글 제목</span>
+          <span className="search-post-user">작성자</span>
           <span className="post-date">작성일자</span>
         </div>
         <hr />

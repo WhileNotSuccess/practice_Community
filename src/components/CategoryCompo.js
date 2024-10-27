@@ -20,6 +20,7 @@ export const CategoryCompo = () => {
     dispatch({ type: "CATEGORY_CHANGE", payload: category });
 
     navigate("/", { state: { category: category } });
+    console.log(category);
   };
 
   return (
