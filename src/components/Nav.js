@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../App";
 import searchIcon from "../img/search.jpg";
 import { useDispatch } from "react-redux";
+import axios from '../lib/axios'
 
 const Nav = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -28,6 +29,13 @@ const Nav = () => {
       inputExist();
     }
   };
+  const onSearch = (e) => {
+    e.preventDefault()
+    const content = searchInput.split(' ')
+    axios.get(`http://localhost:8000/api/search?target=title&content=${content.join('-')}&category=자유게시판&limit=20`)
+    .then(res=>console.log(res.data))
+    .catch((e)=>console.log(e.response.data.message))
+  }; /*  */
 
   return (
     <div className="parent">
@@ -35,6 +43,7 @@ const Nav = () => {
         <Link to="/" className="logo"></Link>
 
         <div className="rectangle">
+          <form onSubmit={onSearch}>
           <input
             className="search-box"
             placeholder="내용을 입력하세요."
@@ -45,6 +54,7 @@ const Nav = () => {
           <button className="search-icon" onClick={inputExist}>
             <img src={searchIcon} alt="" />
           </button>
+          </form>
         </div>
       </div>
       <div className="banner"></div>

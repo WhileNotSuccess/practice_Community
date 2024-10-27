@@ -1,14 +1,14 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { useAuth } from "../hooks/auth";
 
 const Login = () => {
   const { login } = useAuth({
-    middleware: 'guest',
-    redirectIfAuthenticated: '/user-test',
+    middleware: "guest",
+    redirectIfAuthenticated: "/user-test",
   });
   const [inputs, setInputs] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [shouldRemember, setShouldRemember] = useState(false);
   const [errors, setErrors] = useState([]);

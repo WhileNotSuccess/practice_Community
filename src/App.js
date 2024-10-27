@@ -11,7 +11,8 @@ import SignIn from "./pages/SignIn";
 import Nav from "./components/Nav";
 import SearchResult from "./pages/SearchResult";
 import UserTest from "./pages/UserTest";
-
+import ImageTest from "./pages/ImageTest";
+import ParserTest from "./pages/ParserTest";
 const App = () => {
   return (
     <>
@@ -26,6 +27,8 @@ const App = () => {
         <Route path="/search-result" Component={SearchResult} />
         <Route path="/list-in" Component={ListIn} />
         <Route path="/user-test" Component={UserTest} />
+        <Route path="/image-test" Component={ImageTest} />
+        <Route path="/parser-test" Component={ParserTest} />
       </Routes>
     </>
   );
