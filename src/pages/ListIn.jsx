@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../lib/axios.js";
-import ListInCompo from "../components/ListInCompo.js";
-import { Navigate, useParams } from "react-router-dom";
+import ListInCompo from "../components/ListInComp.js";
+import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../components/Comment.jsx";
 import "../css/ListInComp.css";
 import { useAuth } from "../hooks/auth.js";
@@ -12,6 +12,7 @@ const ListIn = () => {
   const [urender, urRender] = useState(false);
   const [comment, sComment] = useState([]);
   const id = useParams().id;
+  const navi = useNavigate();
   const { user } = useAuth({
     middleware: "guest",
   });
@@ -36,11 +37,11 @@ const ListIn = () => {
     sContent("");
   };
   const updater = () => {
-    // Navigate("http://localhost:3000/");
+    navi(`post-update/${id}`);
   };
   const deleter = () => {
     axios.delete(`http://localhost:8000/api/post/${id}`);
-    Navigate("http://localhost:3000/");
+    navi("http://localhost:3000/");
   };
   const commentOn = () => {
     axios.post(`http://localhost:8000/api/comments`, {

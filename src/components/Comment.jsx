@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "../lib/axios";
 import NComment from "./NComment";
 import "../css/ListInComp.css";
+import B from "../img/arrow_down.png";
+import C from "../img/arrow_up.png";
 
 const Comment = ({ data, urender, urRender, user }) => {
   const [datad, sDatad] = useState([]);
@@ -9,7 +11,7 @@ const Comment = ({ data, urender, urRender, user }) => {
   const [content, sContent] = useState("");
   const [render, sRender] = useState(false);
   const [cAppear, sCAppear] = useState(false);
-
+  const [hide, sHide] = useState(false);
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/nested-comments?comment-id=${data.id}`)
@@ -86,17 +88,23 @@ const Comment = ({ data, urender, urRender, user }) => {
           </div>
         ) : null}
       </div>
-      {datad.map((att) => {
-        return (
-          <NComment
-            key={att.id}
-            data={att}
-            render={render}
-            sRender={sRender}
-            user={user}
-          />
-        );
-      })}
+      <label for={hide} onClick={() => sHide(!hide)}>
+        {hide ? <img src={C} alt="" /> : <img src={B} alt="" />}
+        {datad.length}개의 대댓글
+      </label>
+      {hide
+        ? datad.map((att) => {
+            return (
+              <NComment
+                key={att.id}
+                data={att}
+                render={render}
+                sRender={sRender}
+                user={user}
+              />
+            );
+          })
+        : null}
     </div>
   );
 };

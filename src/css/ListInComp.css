@@ -26,7 +26,11 @@ h5 {
 .incomment > * {
   height: 25px;
 }
-.incomment > div > img {
+label {
+  height: 25px;
+}
+.incomment > div > img,
+label > img {
   height: 25px;
 }
 .incomment > .button {
