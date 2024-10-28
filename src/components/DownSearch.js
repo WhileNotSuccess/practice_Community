@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import searchIcon from "../img/search.jpg";
+import "../css/Nav.css";
 
 const DownSearch = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const DownSearch = () => {
         <option value={"author"}>작성자</option>
       </select>
       <input
-        className="search-box"
+        className="down-search-box"
         placeholder="내용을 입력하세요."
         value={downSearchInput}
         onChange={onChange}

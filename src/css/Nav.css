@@ -1,4 +1,3 @@
-/* Nav.css */
 .parent {
   display: flex;
   flex-direction: column;
@@ -10,9 +9,11 @@
 .header {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 7vh;
   margin-bottom: 20px;
+  padding: 0 20px;
 }
 
 .logo {
@@ -23,45 +24,33 @@
   height: 5cm;
   background-color: rgba(200, 200, 200, 0.7);
   border: 2px solid transparent;
-  margin-right: 20px auto 10px;
+  margin-right: 20px;
 }
 
 .rectangle {
   display: flex;
-  width: 50%;
-  height: 7vh;
-  justify-content: flex-start;
   align-items: center;
+  width: 60%;
+  height: 7vh;
   background: rgba(4, 74, 254, 0.5);
   border-radius: 8px;
-  margin-left: 9.5%;
-  margin-right: auto;
-  margin-top: 2%;
-  margin-bottom: 10px;
   padding: 0 10px;
+  margin: 0 auto;
+  margin-right: 16%;
 }
 
-.banner {
+.search-form {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
-  padding: 10px;
-  gap: 10px;
   width: 100%;
-  height: 5vh;
-  background: #b4c9ff;
-  margin: 20px 0;
-  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.1);
 }
 
 .search-box {
-  flex: 1;
+  flex-grow: 1;
   padding: 10px;
-  height: calc(80% - 22px);
+  height: 100%;
   background: #ffffff;
   border-radius: 8px;
-  margin: 0 5px;
   border: none;
 }
 
@@ -69,13 +58,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
   width: 40px;
   height: 40px;
   background: #ffffff;
   border-radius: 8px;
   border: none;
-  margin: 0 5px;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .search-icon img {
@@ -85,4 +74,15 @@
 
 .search-box:focus {
   outline: none;
+}
+
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 5vh;
+  background: #b4c9ff;
+  margin: 20px 0;
+  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.1);
 }
