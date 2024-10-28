@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/auth";
+import "../css/SignInComp.css";
 const SignIn = () => {
-  
   const [inputs, setInputs] = useState({
     nickName: "",
     email: "",
     password: "",
   });
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const [errors, setErrors] = useState([])
-  const {register}= useAuth({
-    middleware:'guest',
-    redirectIfAuthenticated:'/user-test'
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [errors, setErrors] = useState([]);
+  const { register } = useAuth({
+    middleware: "guest",
+    redirectIfAuthenticated: "/user-test",
   });
   const onChange = (e) => {
     let { name, value } = e.target;
@@ -25,14 +25,11 @@ const SignIn = () => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    
     register({
       ...inputs,
       password_confirmation: passwordConfirmation,
       setErrors,
-    })
-      
-    
+    });
   };
 
   return (
@@ -73,16 +70,20 @@ const SignIn = () => {
         className="loginInput"
         minLength={8}
       />
-      
-      
-      {errors.email?.length > 0 && errors.email.map((item,index)=>{
-        return <p className="error" key={index}>
-          {item}
-        </p>
-      })}
-      {passwordConfirmation !== inputs.password ? <p className="error">비밀번호가 일치하지 않습니다.</p> : null}
+
+      {errors.email?.length > 0 &&
+        errors.email.map((item, index) => {
+          return (
+            <p className="error" key={index}>
+              {item}
+            </p>
+          );
+        })}
+      {passwordConfirmation !== inputs.password ? (
+        <p className="error">비밀번호가 일치하지 않습니다.</p>
+      ) : null}
       <button type="submit" className="loginButton">
-      Register
+        Register
       </button>
     </form>
   );
