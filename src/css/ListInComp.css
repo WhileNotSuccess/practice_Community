@@ -25,9 +25,11 @@ h5 {
 
 .incomment > * {
   height: 25px;
+  display: flex;
 }
 label {
   height: 25px;
+  display: flex;
 }
 .incomment > div > img,
 label > img {

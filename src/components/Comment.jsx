@@ -88,10 +88,13 @@ const Comment = ({ data, urender, urRender, user }) => {
           </div>
         ) : null}
       </div>
-      <label for={hide} onClick={() => sHide(!hide)}>
-        {hide ? <img src={C} alt="" /> : <img src={B} alt="" />}
-        {datad.length}개의 대댓글
-      </label>
+      {datad.length === 0 ? null : (
+        <label for={hide} onClick={() => sHide(!hide)}>
+          {hide ? <img src={C} alt="" /> : <img src={B} alt="" />}
+          {datad.length}개의 대댓글
+        </label>
+      )}
+
       {hide
         ? datad.map((att) => {
             return (
