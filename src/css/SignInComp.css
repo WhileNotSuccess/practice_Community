@@ -1,0 +1,25 @@
+.lContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+
+  padding: 0 3%;
+  box-sizing: border-box;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.lContainer > input {
+  width: 40vh;
+  height: 40px;
+  border-radius: 5px;
+  background-color: #c4d4fb;
+  margin: 10px;
+}
+.loginButton {
+  background-color: #275bdb;
+  width: 20vh;
+  border-radius: 5px;
+  height: 30px;
+  margin-top: 20px;
+}

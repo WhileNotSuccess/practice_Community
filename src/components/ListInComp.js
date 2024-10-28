@@ -1,7 +1,14 @@
 import React from "react";
-import "../css/ListInComp.css";
-const ListInComp = () => {
-  return <div>ListInComp</div>;
+
+const ListCompo = ({ category, title, date, author }) => {
+  return (
+    <div>
+      <h4>
+        [{category}]{title}
+      </h4>
+      <h5>{author}</h5>
+    </div>
+  );
 };
 
-export default ListInComp;
+export default ListCompo;

@@ -1,55 +1,94 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Comment from "./Comment";
-import ListCompo from "./ListCompo";
-import { Navigate } from "react-router-dom";
+import axios from "../lib/axios.js";
+import ListInCompo from "../components/ListInCompo.js";
+import { Navigate, useParams } from "react-router-dom";
+import Comment from "../components/Comment.jsx";
+import "../css/ListInComp.css";
+import { useAuth } from "../hooks/auth.js";
 
-const ListIn = ({ id }) => {
-  const [data, setdata] = useState([]);
-
-  id = 1;
-  const updater = () => {};
-  const deleter = () => {
-    axios.delete(`http://127.0.0.1:8000/api/posts/${id}`).then(); //response로 지워야할 comment의 id 받아올 수 있는가?
-    Navigate("http://localhost:3000");
-  };
-  //댓글 삭제
-  const deleteCom = ({ id }) => {
-    axios.delete(`http://127.0.0.1:8000/api/comments/${id}`).then();
-  };
-  //대댓글 삭제
-  const deleteNeCom = ({ id }) => {
-    axios.delete(`http://127.0.0.1:8000/api/nested-comments/${id}`);
-  };
+const ListIn = () => {
+  const [post, sPost] = useState({});
+  const [content, sContent] = useState("");
+  const [urender, urRender] = useState(false);
+  const [comment, sComment] = useState([]);
+  const id = useParams().id;
+  const { user } = useAuth({
+    middleware: "guest",
+  });
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/posts/${id}`)
+      .get(`http://localhost:8000/api/posts/${id}`)
       .then((res) => res.data.data)
-      .then((data) => {
-        setdata(data);
-      });
-  }, [id]);
-  return (
-    <div>
-      <ListCompo
-        category={data.category}
-        author={data.author}
-        date={data.updated_at}
-        title={data.title}
-      />
-      <div>
-        <button onClick={updater}>글 수정</button>
-        <button onClick={deleter}>글 삭제</button>
-      </div>
+      .then((data) => sPost(data))
+      .then(
+        axios
+          .get(`http://localhost:8000/api/comments?post-id=${id}`)
+          .then((res) => res.data.data)
+          .then((data) => sComment(data))
+      );
+  }, [urender]);
+  const confirm = (e) => {
+    e.preventDefault();
+    if (content !== "") {
+      commentOn();
+    }
+    urRender(!urender);
+    sContent("");
+  };
+  const updater = () => {
+    // Navigate("http://localhost:3000/");
+  };
+  const deleter = () => {
+    axios.delete(`http://localhost:8000/api/post/${id}`);
+    Navigate("http://localhost:3000/");
+  };
+  const commentOn = () => {
+    axios.post(`http://localhost:8000/api/comments`, {
+      postId: `${id}`,
+      content: content,
+    });
+  };
 
-      <div>
-        <h3>내용</h3>
-        <text>{data.content}</text>
+  return (
+    <div className="main">
+      <ListInCompo
+        category={post.category}
+        author={post.author}
+        date={post.updated_at}
+        title={post.title}
+      />
+      <div id="line">
+        <div className="listButton">
+          <button onClick={updater}>글 수정</button>
+          <button onClick={deleter}>글 삭제</button>
+        </div>
+        <div>
+          <h3>내용</h3>
+          {post.content}
+        </div>
       </div>
       <hr />
-      <button>댓글 작성</button>
-
-      <Comment id={id} deleteCom={deleteCom} deleteNeCom={deleteNeCom} />
+      <div id="form">
+        <form onSubmit={confirm}>
+          <input
+            type="text"
+            value={content}
+            onChange={(e) => sContent(e.target.value)}
+          />
+          <button>작성</button>
+        </form>
+      </div>
+      {comment.map((data) => {
+        return (
+          <Comment
+            key={data.id}
+            data={data}
+            urender={urender}
+            urRender={urRender}
+            user={user?.nick_name}
+          />
+        );
+      })}
     </div>
   );
 };

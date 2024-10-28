@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListCompo = ({ category, title, date, author }) => {
+const ListInCompo = ({ category, title, date, author }) => {
   return (
     <div>
       <h4>
@@ -12,4 +12,4 @@ const ListCompo = ({ category, title, date, author }) => {
   );
 };
 
-export default ListCompo;
+export default ListInCompo;
