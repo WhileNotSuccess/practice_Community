@@ -17,7 +17,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     // 이를 캐시를 갱신한다고 한다.
     // mutate는 함수다. 언제 데이터를 revalidate 할지 컨트롤 할 수 있다.
     // mutate 함수에는 파라미터로 useSWR의 키를 주어야 하지만, 어떤 useSWR의 반환값으로 나온 mutate는 key가 이미 바인딩 되어있어서, key를 넘기지 않아도 된다.
-    const { data: user, error, mutate } = useSWR('http://localhost:8000/api/user', () =>
+    const { data: user, error, mutate, isLoading } = useSWR('http://localhost:8000/api/user', () =>
         axios
             .get('http://localhost:8000/api/user')
             .then(res => res.data)
@@ -97,5 +97,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         register,
         login,
         logout,
+        isLoading,
     }
 }

@@ -56,19 +56,14 @@ const Post = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return <div>loading....</div>;
-  }
+    // 로딩이 완료되고 user가 없는 경우에만 리다이렉트
+    if (!isLoading && !user) {
+      navigate('/');
+    }
+  }, [user, isLoading, navigate]);
 
   const adapter = (editorInstance) => {
     editorInstance.plugins.get("FileRepository").createUploadAdapter = (
