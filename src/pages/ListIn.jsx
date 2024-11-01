@@ -37,11 +37,11 @@ const ListIn = () => {
     sContent("");
   };
   const updater = () => {
-    navi(`post-update/${id}`);
+    navi(`/post-update/${id}`);
   };
   const deleter = () => {
     axios.delete(`http://localhost:8000/api/post/${id}`);
-    navi("http://localhost:3000/");
+    navi("/");
   };
   const commentOn = () => {
     axios.post(`http://localhost:8000/api/comments`, {
@@ -60,8 +60,12 @@ const ListIn = () => {
       />
       <div id="line">
         <div className="listButton">
-          <button onClick={updater}>글 수정</button>
-          <button onClick={deleter}>글 삭제</button>
+          {user === post.author ? (
+            <>
+              <button onClick={updater}>글 수정</button>
+              <button onClick={deleter}>글 삭제</button>
+            </>
+          ) : null}
         </div>
         <div>
           <h3>내용</h3>

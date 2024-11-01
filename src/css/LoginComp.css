@@ -22,3 +22,23 @@
   display: flex;
   padding: 20px;
 }
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  min-height: 100vh;
+  padding: 0 3%;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+.container > input {
+  width: 40vh;
+  height: 40px;
+  border-radius: 5px;
+  background-color: #c4d4fb;
+  margin: 10px;
+}

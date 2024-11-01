@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/auth";
-import "../css/SignInComp.css";
+import "../css/LoginComp.css";
 const SignIn = () => {
   const [inputs, setInputs] = useState({
     nickName: "",
