@@ -20,12 +20,11 @@ const App = () => {
       <Routes>
         <Route path="/" Component={Main} />
         <Route path="/find-password" Component={FindPassword} />
-        <Route path="/list-in" Component={ListIn} />
+        <Route path="/list-in/:id" Component={ListIn} />
         <Route path="/login" Component={Login} />
         <Route path="/post" Component={Post} />
         <Route path="/sign-in" Component={SignIn} />
         <Route path="/search-result" Component={SearchResult} />
-        <Route path="/list-in" Component={ListIn} />
         <Route path="/user-test" Component={UserTest} />
         <Route path="/image-test" Component={ImageTest} />
         <Route path="/parser-test" Component={ParserTest} />

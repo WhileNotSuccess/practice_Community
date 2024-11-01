@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/auth";
-import "../css/SignInComp.css";
+import "../css/LoginComp.css";
 const SignIn = () => {
   const [inputs, setInputs] = useState({
     nickName: "",
@@ -33,7 +33,7 @@ const SignIn = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="container">
+    <form onSubmit={onSubmit} className="lContainer">
       <input
         type="text"
         name="nickName"

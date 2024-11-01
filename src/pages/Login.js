@@ -36,7 +36,7 @@ const Login = () => {
   return (
     <>
       {status}
-      <form onSubmit={onSubmit} className="container">
+      <form onSubmit={onSubmit} className="lContainer">
         <div className="content">
           <input
             type="email"
