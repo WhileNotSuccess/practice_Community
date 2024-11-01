@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/auth";
-import "../css/LogInComp.css";
+import "../css/LoginComp.css";
 const Login = () => {
   const { login } = useAuth({
     middleware: "guest",
