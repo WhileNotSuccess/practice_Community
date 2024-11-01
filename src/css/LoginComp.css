@@ -23,7 +23,7 @@
   padding: 20px;
 }
 
-.container {
+.lContainer {
   display: flex;
   flex-wrap: wrap;
   position: relative;
@@ -35,7 +35,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.container > input {
+.lContainer > input {
   width: 40vh;
   height: 40px;
   border-radius: 5px;

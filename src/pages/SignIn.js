@@ -33,7 +33,7 @@ const SignIn = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="container">
+    <form onSubmit={onSubmit} className="lContainer">
       <input
         type="text"
         name="nickName"
