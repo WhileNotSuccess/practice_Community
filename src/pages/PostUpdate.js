@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-//import PathName from "./PathName";
-import "../css/PostComp.css";
-import { PostCompo, UserInfo, UserInfoCompo } from "../components/MainComp";
-import { CategoryCompo } from "../components/CategoryCompo";
-import { useEffect } from "react";
-import axios from "../lib/axios";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "../css/PostComp.css";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../hooks/auth";
+import axios from "../lib/axios";
+import { UserInfoCompo } from "../components/MainComp";
+import ReactHtmlParser from "html-react-parser";
+import { useNavigate } from "react-router-dom";
+import { CategoryCompo } from "../components/CategoryCompo";
 
 class MyUploadAdapter {
   constructor(loader) {
@@ -18,7 +18,6 @@ class MyUploadAdapter {
   upload() {
     return new Promise((resolve, reject) => {
       this.loader.file.then((file) => {
-        console.log("Loaded file:", file); // 파일 정보 확인
         const data = new FormData();
         data.append("image", file);
 
@@ -30,7 +29,6 @@ class MyUploadAdapter {
           })
           .then((res) => {
             const imgUrl = res.data;
-            console.log(res.data);
             resolve({
               default: imgUrl,
             });
@@ -41,22 +39,35 @@ class MyUploadAdapter {
       });
     });
   }
-
   abort() {}
 }
 
-const Post = () => {
-  const [loginUser, setLoginUser] = useState([]);
-  const [postCategory, setPostCategory] = useState([]);
+const PostUpdate = () => {
+  const { id } = useParams();
+  const [upTitle, setUpTitle] = useState("");
+  const [upContent, setUpContent] = useState("");
   const [boardName, setBoardName] = useState("자유게시판");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const adapter = (editorInstance) => {
+    editorInstance.plugins.get("FileRepository").createUploadAdapter = (
+      loader
+    ) => {
+      return new MyUploadAdapter(loader);
+    };
+  };
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/api/posts/${id}`).then((res) => {
+      setUpTitle(res.data.data.title);
+      setUpContent(res.data.data.content);
+    });
+  }, [id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -70,49 +81,33 @@ const Post = () => {
     return <div>loading....</div>;
   }
 
-  const adapter = (editorInstance) => {
-    editorInstance.plugins.get("FileRepository").createUploadAdapter = (
-      loader
-    ) => {
-      return new MyUploadAdapter(loader);
-    };
+  const titlechange = (e) => {
+    setUpTitle(e.target.value);
   };
 
   const GoToMain = () => {
     navigate("/");
   };
 
-  const titlechange = (e) => {
-    setTitle(e.target.value);
-    console.log(title);
-  };
+  const onclick = (id) => {
+    const clean = upContent.replace(/<\/?[^>]+(>|$)/g, "");
 
-  const contentchange = (e) => {
-    setContent(e.target.value);
-    console.log(content);
-  };
-
-  const onclick = (boardName) => {
-    console.log(`http://localhost:8000/api/posts?category=${boardName}`);
-
-    // FormData 객체 생성
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("category", boardName);
+    console.log("Current content:", upContent); // 현재 content 확인
+    console.log("Cleaned content:", clean);
 
     axios
-      .post(`http://localhost:8000/api/posts?category=${boardName}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      .put(`http://localhost:8000/api/posts/${id}`, {
+        title: upTitle,
+        content: upContent,
+        category: boardName,
       })
       .then((res) => {
-        console.log("성공했습니다", res.data);
+        console.log("수정 성공", res.data);
+
         navigate("/");
       })
       .catch((error) => {
-        console.error("실패했습니다", error);
+        console.error("수정 실패", error);
       });
   };
 
@@ -130,22 +125,26 @@ const Post = () => {
             <option value={"공지사항"}>공지사항</option>
             <option value={"축제게시판"}>축제게시판</option>
           </select>
-          <input placeholder="제목" onChange={titlechange}></input>
+          <input
+            placeholder="제목"
+            onChange={titlechange}
+            value={upTitle}
+          ></input>
         </div>
         <div className="user-name">
-          <>작성자 : {user?.nick_name}</>
+          <>작성자 : {user.nick_name}</>
         </div>
         <div className="content-write">
           <div className="ckeditor">
             <CKEditor
               editor={ClassicEditor}
-              data=""
+              data={upContent}
               onReady={(editorInstance) => {
                 setEditor(editorInstance);
                 adapter(editorInstance, boardName);
               }}
               onChange={(event, editorInstance) => {
-                setContent(editorInstance.getData());
+                setUpContent(editorInstance.getData());
               }}
               onUpload={(event, editorInstance) => {
                 const imageFile = event.data.file;
@@ -155,8 +154,8 @@ const Post = () => {
           </div>
         </div>
         <div className="btns-box">
-          <div className="upload-btn" onClick={() => onclick(boardName)}>
-            <>업로드</>
+          <div className="upload-btn" onClick={() => onclick(id)}>
+            <>수정</>
           </div>
           <div className="upload-btn" onClick={GoToMain}>
             취소
@@ -171,4 +170,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default PostUpdate;

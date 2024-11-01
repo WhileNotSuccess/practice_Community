@@ -9,6 +9,7 @@ import searchIcon from "../img/search.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import DownSearch from "../components/DownSearch";
+import { useAuth } from "../hooks/auth";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,8 @@ const Main = () => {
   const [notion, setNotion] = useState([]); // 공지내용 가져오기
   const [downSearchInput, setDownSearchInput] = useState(""); // 하단 검색창
   const [searchInput, setSearchInput] = useState(downSearchInput); // 검색 입력값
+
+  const { user } = useAuth();
 
   const fetchPosts = async (page) => {
     // 메인 페이지 글 가져오기
@@ -115,7 +118,7 @@ const Main = () => {
         {notion.length > 0 && !h_announce && <PostList list={notion} />}
         {posts.length > 0 && <PostList list={posts} />}
       </div>
-      <UserInfoCompo />
+      <UserInfoCompo user={user} />
       <DownSearch />
 
       <div className="down-banner">

@@ -41,7 +41,9 @@ export const UserInfoCompo = (props) => {
         </>
       ) : (
         <>
-          <div className="user-login">로그인</div>
+          <Link to="/login" className="user-login">
+            로그인
+          </Link>
           <Link to="/sign-in" className="logout-btn">
             회원가입
           </Link>
