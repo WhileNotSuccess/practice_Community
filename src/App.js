@@ -25,7 +25,6 @@ const App = () => {
         <Route path="/post" Component={Post} />
         <Route path="/sign-in" Component={SignIn} />
         <Route path="/search-result" Component={SearchResult} />
-        <Route path="/list-in" Component={ListIn} />
         <Route path="/user-test" Component={UserTest} />
         <Route path="/image-test" Component={ImageTest} />
         <Route path="/parser-test" Component={ParserTest} />
