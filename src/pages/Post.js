@@ -59,7 +59,6 @@ const Post = () => {
   const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    // 로딩이 완료되고 user가 없는 경우에만 다이어트
     if (!isLoading && !user) {
       alert("로그인 후 이용해주세요");
       navigate("/");
@@ -135,7 +134,7 @@ const Post = () => {
           <input placeholder="제목" onChange={titlechange}></input>
         </div>
         <div className="user-name">
-          <>작성자 : {user?.nick_name}</>
+          <>작성자 : {user ? user.nick_name : "로딩 중..."}</>
         </div>
         <div className="content-write">
           <div className="ckeditor">
