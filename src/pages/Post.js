@@ -110,11 +110,9 @@ const Post = () => {
       .catch((error) => {
         if (title === "") {
           alert("제목을 입력해주세요");
-          navigate("/post");
         }
         if (content === "") {
           alert("내용을 입력해주세요");
-          navigate("/post");
         }
         console.error("실패했습니다", error);
       });
