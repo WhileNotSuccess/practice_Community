@@ -59,9 +59,10 @@ const Post = () => {
   const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    // 로딩이 완료되고 user가 없는 경우에만 리다이렉트
+    // 로딩이 완료되고 user가 없는 경우에만 다이어트
     if (!isLoading && !user) {
-      navigate('/');
+      alert("로그인 후 이용해주세요");
+      navigate("/");
     }
   }, [user, isLoading, navigate]);
 
@@ -107,6 +108,14 @@ const Post = () => {
         navigate("/");
       })
       .catch((error) => {
+        if (title === "") {
+          alert("제목을 입력해주세요");
+          navigate("/post");
+        }
+        if (content === "") {
+          alert("내용을 입력해주세요");
+          navigate("/post");
+        }
         console.error("실패했습니다", error);
       });
   };
