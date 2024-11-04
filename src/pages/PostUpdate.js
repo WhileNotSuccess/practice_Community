@@ -78,11 +78,6 @@ const PostUpdate = () => {
   };
 
   const onclick = (id) => {
-    const clean = upContent.replace(/<\/?[^>]+(>|$)/g, "");
-
-    console.log("Current content:", upContent); // 현재 content 확인
-    console.log("Cleaned content:", clean);
-
     axios
       .put(`http://localhost:8000/api/posts/${id}`, {
         title: upTitle,
