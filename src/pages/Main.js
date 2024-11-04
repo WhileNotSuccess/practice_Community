@@ -15,9 +15,9 @@ const Main = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const category = useSelector((state) => state.category); // 카테고리
-  const currentPage = useSelector((state) => state.currentPage); // 현재 페이지
   const target = useSelector((state) => state.target); // 검색 주제(제목, 내용, 작성자)
   const [posts, setPosts] = useState([]); // 메인에서 글 가져오기
+  const [currentPage, setCurrentPage] = useState(""); // 현재 페이지
   const [nextPage, setNextPage] = useState(""); // 다음 페이지
   const [prevPage, setPrevPage] = useState(""); // 이전 페이지
   const [postPerPage, setPostPerPage] = useState(10); // 페이지에 띄울 글 갯수
@@ -36,7 +36,7 @@ const Main = () => {
     `
     );
     setPosts(data.data);
-    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setCurrentPage(data.currentPage);
     setNextPage(data.nextPage);
     setPrevPage(data.prevPage);
     setTotalPage(data.totalPage);
@@ -72,7 +72,7 @@ const Main = () => {
     if (url) {
       const { data } = await axios.get(url);
       setPosts(data.data);
-      dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+      setCurrentPage(data.currentPage);
       setNextPage(data.nextPage);
       setPrevPage(data.prevPage);
       setTotalPage(data.totalPage);

@@ -21,7 +21,7 @@ const UserPage = () => {
 
   const commentData = async () => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/search?content=Lessie-Konopelski-IV&target=author&limit=10&page=1`
+      `http://localhost:8000/api/search?content=${userName}&target=author&limit=10&page=2`
     );
     setUserData(data.data);
   };
