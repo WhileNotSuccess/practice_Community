@@ -51,7 +51,7 @@ const PostUpdate = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const adapter = (editorInstance) => {
@@ -69,18 +69,6 @@ const PostUpdate = () => {
     });
   }, [id]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return <div>loading....</div>;
-  }
-
   const titlechange = (e) => {
     setUpTitle(e.target.value);
   };
@@ -90,11 +78,6 @@ const PostUpdate = () => {
   };
 
   const onclick = (id) => {
-    const clean = upContent.replace(/<\/?[^>]+(>|$)/g, "");
-
-    console.log("Current content:", upContent); // 현재 content 확인
-    console.log("Cleaned content:", clean);
-
     axios
       .put(`http://localhost:8000/api/posts/${id}`, {
         title: upTitle,
@@ -107,6 +90,12 @@ const PostUpdate = () => {
         navigate("/");
       })
       .catch((error) => {
+        if (upTitle === "") {
+          alert("제목을 입력해주세요");
+        }
+        if (upContent === "") {
+          alert("내용을 입력해주세요");
+        }
         console.error("수정 실패", error);
       });
   };
@@ -132,7 +121,7 @@ const PostUpdate = () => {
           ></input>
         </div>
         <div className="user-name">
-          <>작성자 : {user.nick_name}</>
+          <>작성자 : {user ? user.nick_name : "로딩 중..."}</>
         </div>
         <div className="content-write">
           <div className="ckeditor">
