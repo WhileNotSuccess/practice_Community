@@ -35,6 +35,9 @@ const Login = () => {
   };
   return (
     <>
+      <button onClick={() => window.location.href = '/forgot-password'} className="loginButton">
+          Forgot Password
+      </button>
       {status}
       <form onSubmit={onSubmit} className="lContainer">
         <div className="content">
@@ -70,6 +73,7 @@ const Login = () => {
         <button type="submit" className="loginButton">
           Login
         </button>
+        
         <div className="block mt-4">
           <label htmlFor="remember_me">
             <input
@@ -84,6 +88,7 @@ const Login = () => {
 
         <a href="/sign-in">Sign in</a>
       </form>
+      
     </>
   );
 };

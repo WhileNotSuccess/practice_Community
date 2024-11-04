@@ -6,7 +6,7 @@ import { setCookie } from '../utils/cookie';
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useNavigate();
-    
+    const params = useParams();
 
     // swr로 요청을 보낸 후, 데이터를 받아온다.
     // data는 성공시, error은 실패시 받아오고, data의 이름을 user로 바꾼다.
@@ -70,7 +70,50 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 setErrors(error.response.data.errors)
             })
     }
+    const forgotPassword = async ({ setErrors, setStatus, email }) => {
+        await csrf()
 
+        setErrors([])
+        setStatus(null)
+
+        axios
+            .post('http://localhost:8000/forgot-password', { email })
+            .then(response => {
+                console.log('forgotPassword', response)
+                setStatus(response.data.status)})
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const resetPassword = async ({ setErrors, setStatus, ...props }) => {
+        await csrf()
+
+        setErrors([])
+        setStatus(null)
+
+        axios
+            .post('http://localhost:8000/reset-password', { token: params.token, ...props })
+            .then(response => {
+                window.location.href = '/login'
+            })
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const resendEmailVerification = ({ setStatus }) => {
+        axios
+            .post('http://localhost:8000/email/verification-notification')
+            .then(response => {
+                console.log('resendEmailVerification', response)
+                setStatus(response.data.status)
+            })
+    }
 
     const logout = async () => {
         if (!error) {
@@ -96,6 +139,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         user,
         register,
         login,
+        forgotPassword,
+        resetPassword,
+        resendEmailVerification,
         logout,
         isLoading,
     }

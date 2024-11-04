@@ -13,6 +13,9 @@ import UserTest from "./pages/UserTest";
 import ImageTest from "./pages/ImageTest";
 import ParserTest from "./pages/ParserTest";
 import PostUpdate from "./pages/PostUpdate";
+import EmailVerify from "./pages/EmailVerify";
+import PasswordReset from "./pages/PasswordReset";
+import ForgotPassword from "./pages/ForgotPassword";
 const App = () => {
   return (
     <>
@@ -29,6 +32,10 @@ const App = () => {
         <Route path="/image-test" Component={ImageTest} />
         <Route path="/parser-test" Component={ParserTest} />
         <Route path="/post-update/:id" Component={PostUpdate} />
+        <Route path="/verify-email" Component={EmailVerify} />
+        <Route path="/password-reset/:token" Component={PasswordReset} />
+        <Route path="/forgot-password" Component={ForgotPassword} />
+
       </Routes>
     </>
   );
