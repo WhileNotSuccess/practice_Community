@@ -5,27 +5,38 @@ import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../components/Comment.jsx";
 import "../css/ListInComp.css";
 import { useAuth } from "../hooks/auth.js";
+import HTMLReactParser from "html-react-parser/lib/index";
 
 const ListIn = () => {
   const [post, sPost] = useState({});
   const [content, sContent] = useState("");
   const [urender, urRender] = useState(false);
   const [comment, sComment] = useState([]);
+  const [listcon, sListcon] = useState("");
+  const [conid, sConid] = useState(0);
   const id = useParams().id;
   const navi = useNavigate();
   const { user } = useAuth({
     middleware: "guest",
   });
+  const check = () => {
+    console.log(user);
+  };
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/posts/${id}`)
       .then((res) => res.data.data)
-      .then((data) => sPost(data))
+      .then((data) => {
+        sPost(data);
+        sListcon(data.content);
+      })
       .then(
         axios
           .get(`http://localhost:8000/api/comments?post-id=${id}`)
           .then((res) => res.data.data)
-          .then((data) => sComment(data))
+          .then((data) => {
+            sComment(data);
+          })
       );
   }, [urender]);
   const confirm = (e) => {
@@ -51,28 +62,25 @@ const ListIn = () => {
   };
 
   return (
-    <div className="main">
+    <div className="listmain">
+      <button onClick={check}>check</button>
       <ListInCompo
         category={post.category}
         author={post.author}
         date={post.updated_at}
         title={post.title}
       />
-      <div id="line">
+      {user?.nick_name === post.author ? (
         <div className="listButton">
-          {user === post.author ? (
-            <>
-              <button onClick={updater}>글 수정</button>
-              <button onClick={deleter}>글 삭제</button>
-            </>
-          ) : null}
+          <button onClick={updater}>글 수정</button>
+          <button onClick={deleter}>글 삭제</button>
         </div>
-        <div>
-          <h3>내용</h3>
-          {post.content}
-        </div>
+      ) : null}
+      <div id="line">
+        <h3>내용</h3>
+        <div>{HTMLReactParser(listcon)}</div>
       </div>
-      <hr />
+
       <div id="form">
         <form onSubmit={confirm}>
           <input
@@ -83,6 +91,7 @@ const ListIn = () => {
           <button>작성</button>
         </form>
       </div>
+      <div className="announceComment">댓글</div>
       {comment.map((data) => {
         return (
           <Comment
@@ -91,6 +100,8 @@ const ListIn = () => {
             urender={urender}
             urRender={urRender}
             user={user?.nick_name}
+            conid={conid}
+            sConid={sConid}
           />
         );
       })}
