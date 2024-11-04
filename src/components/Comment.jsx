@@ -5,13 +5,26 @@ import "../css/ListInComp.css";
 import B from "../img/arrow_down.png";
 import C from "../img/arrow_up.png";
 
-const Comment = ({ data, urender, urRender, user }) => {
+const Comment = ({ data, urender, urRender, user, conid, sConid }) => {
   const [datad, sDatad] = useState([]);
-  const [appear, nAppear] = useState(false);
+
   const [content, sContent] = useState("");
   const [render, sRender] = useState(false);
   const [cAppear, sCAppear] = useState(false);
+  const [appear, nAppear] = useState(false);
+  const configer = () => {
+    if (cAppear && appear === false) {
+      if (cAppear) {
+        nComment();
+      } else if (appear) {
+        remake();
+      }
+      sContent("");
+      urRender(!urender);
+    }
+  };
   const [hide, sHide] = useState(false);
+
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/nested-comments?comment-id=${data.id}`)
@@ -26,67 +39,56 @@ const Comment = ({ data, urender, urRender, user }) => {
     axios.put(`http://localhost:8000/api/comments/${data.id}`, {
       content: content,
     });
-    sContent("");
-    urRender(!urender);
-    nAppear(!appear);
+    nAppear(false);
   };
   const nComment = () => {
     axios.post(`http://localhost:8000/api/nested-comments`, {
       commentId: `${data.id}`,
       content: content,
     });
-    sContent("");
-    sRender(!render);
-    sCAppear(!cAppear);
+    sCAppear(false);
   };
   return (
     <div className="comment">
       <div className="incomment">
         <div>{data.content}</div>
-        {user === data.author ? (
-          <div className="button">
-            {cAppear ^ appear ? null : (
-              <>
-                <button
-                  onClick={() => {
-                    sCAppear(!cAppear);
-                  }}
-                >
-                  대댓글 작성
-                </button>
-                <button
-                  onClick={() => {
-                    nAppear(!appear);
-                  }}
-                >
-                  수정
-                </button>
-                <button onClick={deleter}>삭제</button>
-              </>
-            )}
 
-            {appear ? (
-              <>
-                <input
-                  type="textbox"
-                  value={content}
-                  onChange={(e) => sContent(e.target.value)}
-                />
-                <button onClick={remake}>완료</button>
-              </>
-            ) : null}
-            {cAppear ? (
-              <>
-                <input
-                  type="textbox"
-                  value={content}
-                  onChange={(e) => sContent(e.target.value)}
-                />
-                <button onClick={nComment}>완료</button>
-              </>
-            ) : null}
-          </div>
-        ) : null}
+        <div className="button">
+          {cAppear ^ appear && conid === data.id ? (
+            <>
+              <input
+                type="textbox"
+                value={content}
+                onChange={(e) => sContent(e.target.value)}
+              />
+              <button onClick={configer}>완료</button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  sConid(data.id);
+                  sCAppear(!cAppear);
+                }}
+              >
+                대댓글 작성
+              </button>
+              {user === data.author ? (
+                <>
+                  <button
+                    onClick={() => {
+                      sConid(data.id);
+                      nAppear(!appear);
+                    }}
+                  >
+                    수정
+                  </button>
+                  <button onClick={deleter}>삭제</button>
+                </>
+              ) : null}
+            </>
+          )}
+        </div>
       </div>
       {datad.length === 0 ? null : (
         <label for={hide} onClick={() => sHide(!hide)}>

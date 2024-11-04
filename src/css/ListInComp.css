@@ -1,15 +1,39 @@
+.listmain {
+  margin-right: 5px;
+  margin-left: 5px;
+}
 .comment {
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
-  background-color: #778aa3;
-
-  overflow: hidden;
+  margin-right: 5px;
+  border-bottom: 1px solid black;
 }
-h5 {
+.ncomment {
+  border-top: 1px solid black;
+}
+.title-board {
+  box-sizing: border-box;
+  min-height: 10%;
+  height: 10%;
+  width: 100%;
+  background: #f0f5ff;
+  border-bottom: 1px solid rgba(4, 74, 254, 0.3);
+  display: flex;
+  align-items: center;
+}
+.author {
+  font-weight: bold;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 10%;
+  height: 10%;
+  background: #f0f5ff;
+  border-bottom: 1px solid rgba(4, 74, 254, 0.3);
   display: flex;
   justify-content: flex-end;
+  padding-right: 10px;
 }
+
 .incomment {
   position: relative;
   display: flex;
@@ -19,8 +43,6 @@ h5 {
   width: 99%;
   margin-top: 3px;
   margin-bottom: 3px;
-
-  border-bottom: 1px solid black;
 }
 
 .incomment > * {
@@ -30,6 +52,9 @@ h5 {
 label {
   height: 25px;
   display: flex;
+  border-top: 1px solid black;
+  padding: 1px;
+  cursor: pointer;
 }
 .incomment > div > img,
 label > img {
@@ -39,27 +64,50 @@ label > img {
   display: block;
   min-width: 172px;
 }
+.button > button,
+.nbutton > button {
+  cursor: pointer;
+  border-radius: 5px;
+}
+.announceComment {
+  border: 1px solid #c1c1c1;
+  background: #f0f5ff;
+  margin: 5px;
+  padding: 5px 0px 5px 15px;
+}
 .incomment > .nbutton {
   display: block;
   min-width: 86px;
+}
+#form {
+  padding: 5px 10px;
+  border-top: 1px solid #044afe;
+  border-bottom: 1px solid #044afe;
+  margin-top: 2px;
+}
+#form > form > button {
+  cursor: pointer;
+  border-radius: 10px;
 }
 .listButton {
   display: flex;
   justify-content: flex-end;
 }
-.main {
-  overflow: hidden;
+.listButton > button {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: #b4c9ff;
+  border-radius: 10px;
 }
 #line {
-  border: 1px solid black;
-  margin-left: 5px;
+  background: #c6d9ff;
 }
-#line > .right_end {
-  display: flex;
-  justify-content: flex-end;
+#line > h3 {
+  margin: 0px;
 }
-#form {
-  padding: 5px 10px;
-  border: 3px solid black;
-  margin-left: 30px;
+#line > * {
+  padding: 5px;
 }

@@ -2,12 +2,14 @@ import React from "react";
 
 const ListCompo = ({ category, title, date, author }) => {
   return (
-    <div>
-      <h4>
-        [{category}]{title}
-      </h4>
-      <h5>{author}</h5>
-    </div>
+    <>
+      <div className="title-board">
+        <h3>
+          [{category}]{title}
+        </h3>
+      </div>
+      <div className="author">작성자:{author}</div>
+    </>
   );
 };
 
