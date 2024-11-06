@@ -72,10 +72,6 @@ const Main = () => {
     fetchPosts(pageNumber);
   };
 
-  const postButton = () => {
-    navigate("/post");
-  };
-
   return (
     <div className="container">
       <CategoryCompo />
