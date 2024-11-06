@@ -7,12 +7,11 @@ export const CategoryCompo = () => {
   const dispatch = useDispatch();
   const categoryList = useSelector((state) => state.categoryList);
   const navigate = useNavigate();
-  const fetchCategories = async () => {
-    const { data } = await axios.get("http://localhost:8000/api/category");
-    dispatch({ type: "CATEGORYLIST_UPLOAD", payload: data.data });
-  };
-
   useEffect(() => {
+    async function fetchCategories() {
+      const { data } = await axios.get("http://localhost:8000/api/category");
+      dispatch({ type: "CATEGORYLIST_UPLOAD", payload: data.data });
+    }
     fetchCategories();
   }, [dispatch]);
 

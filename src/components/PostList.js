@@ -28,17 +28,20 @@ const PostList = ({ list }) => {
         const user = item.author;
         return (
           <div className="line-change" key={item.id} onClick={closeMenu}>
-            <span onClick={() => navig(`/list-in/${item.id}`)}>
+            <div
+              className="title-value"
+              onClick={() => navig(`/list-in/${item.id}`)}
+            >
               [{item.category}] {item.title}
-            </span>
-            <span
+            </div>
+            <div
               className="user-value"
               onContextMenu={(e) => rightClick(e, item.author)}
               style={{ display: "inline-block" }}
             >
               {user}
-            </span>
-            <span className="post-date">{date}</span>
+            </div>
+            <div className="post-date">{date}</div>
           </div>
         );
       })}

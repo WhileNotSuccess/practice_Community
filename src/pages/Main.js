@@ -7,7 +7,7 @@ import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
 import searchIcon from "../img/search.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DownSearch from "../components/DownSearch";
 import { useAuth } from "../hooks/auth";
 
@@ -91,6 +91,11 @@ const Main = () => {
         <div className="options-container">
           <div className="category-name">{category}</div>
           <div className="options-right">
+            {user && (
+              <Link to="/post" className="post-button">
+                글 작성
+              </Link>
+            )}
             <form onClick={() => setHAnnounce(!h_announce)}>
               <input
                 type="checkbox"
