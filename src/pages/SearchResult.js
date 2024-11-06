@@ -3,24 +3,23 @@ import { useLocation } from "react-router-dom";
 import "../css/SearchResult.css";
 import "../css/MainComp.css";
 import axios from "axios";
-import { UserInfoCompo } from "../components/MainComp";
-import { CategoryCompo } from "../components/CategoryCompo";
-import PostList from "../components/PostList";
-import Pagination from "../components/Pagination";
-import DownSearch from "../components/DownSearch";
+import { UserInfoCompo } from "../components/MainComp"; // 오른쪽의 로그인, 로그아웃 및 로그인 유저 정보를 띄우는 컴포넌트
+import { CategoryCompo } from "../components/CategoryCompo"; // 왼쪽의
+import PostList from "../components/PostList"; // 주소가 들어가면 게시글 형태로 만들어주는 컴포넌트
+import Pagination from "../components/Pagination"; // 페이지네이션
+import DownSearch from "../components/DownSearch"; // 하단 검색창
 import { useDispatch, useSelector } from "react-redux";
 
 const SearchResult = () => {
-  const [postPerPage, setPostPerPage] = useState(10);
+  const [postPerPage, setPostPerPage] = useState(10); // 한 페이지에 띄울 게시글 갯수
   const location = useLocation();
-  const { searchInput } = location.state;
-  const currentPage = useSelector((state) => state.currentPage);
-  const target = useSelector((state) => state.target);
-  const [resultData, setResultData] = useState([]);
-  const [totalPage, setTotalPage] = useState(1);
-  const [prevPage, setPrevPage] = useState("");
-  const [nextPage, setNextPage] = useState("");
-  const dispatch = useDispatch();
+  const { searchInput } = location.state; // 검색 내용을 location으로 값을 받아옴
+  const target = useSelector((state) => state.target); // 리듀서를 이용해 이전 페이지의 타겟(제목,내용,작성자)을 받아옴
+  const [resultData, setResultData] = useState([]); // 주소를 통해 받아온 response 데이터
+  const [currentPage, setCurrentPage] = useState(""); // 현재 페이지
+  const [totalPage, setTotalPage] = useState(1); // 전체 페이지
+  const [prevPage, setPrevPage] = useState(""); // 다음 페이지
+  const [nextPage, setNextPage] = useState(""); // 이전 페이지
 
   const fetchResult = async (page) => {
     const { data } = await axios.get(
@@ -30,7 +29,7 @@ const SearchResult = () => {
     setTotalPage(data.totalPage);
     setNextPage(data.nextPage);
     setPrevPage(data.prevPage);
-    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setCurrentPage(data.currentPage);
   };
 
   useEffect(() => {
@@ -38,15 +37,17 @@ const SearchResult = () => {
   }, [postPerPage, searchInput]); // searchInput과 target이 변경될 때도 fetchResult 호출
 
   const pageChange = async (url) => {
+    // 페이지의 < > 버튼을 눌렀을 때 바뀌는 실제값
     const { data } = await axios.get(url);
     setResultData(data.data);
-    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setCurrentPage(data.currentPage);
     setNextPage(data.nextPage);
     setPrevPage(data.prevPage);
     setTotalPage(data.totalPage);
   };
 
   const paginate = (pageNumber) => {
+    // 페이지네이션의 번호 부분을 누르면 호출되는 부분
     fetchResult(pageNumber);
   };
 

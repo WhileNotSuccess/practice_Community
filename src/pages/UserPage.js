@@ -4,43 +4,91 @@ import { CategoryCompo } from "../components/CategoryCompo";
 import { UserInfoCompo } from "../components/MainComp";
 import "../css/UserPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 const UserPage = () => {
   const location = useLocation();
-  const userName = location.state;
-  const [userData, setUserData] = useState([]);
-  const [selectedTab, setSelectedTab] = useState("post"); // 선택된 탭 상태 추가
+  const author = location.state;
+  const [userData, setUserData] = useState([]); // 작성글 또는 댓글 데이터를 저장
+  const [selectedTab, setSelectedTab] = useState("post"); // 탭 상태 ('post' 또는 'comment')
+  const postPerPage = 10; // 페이지 당 글 수
+  const [prevPage, setPrevPage] = useState(""); // 이전 페이지 URL
+  const [nextPage, setNextPage] = useState(""); // 다음 페이지 URL
+  const [totalPage, setTotalPage] = useState(0); // 총 페이지 수
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+
   const navig = useNavigate();
 
-  const postData = async () => {
+  // 작성글 데이터를 가져오는 함수
+  const postData = async (page) => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/search?content=${userName}&target=author&limit=10&page=1`
+      `http://localhost:8000/api/search?content=${author}&target=author&limit=${postPerPage}&page=${page}`
     );
     setUserData(data.data);
+    setPrevPage(data.prevPage);
+    setNextPage(data.nextPage);
+    setTotalPage(data.totalPage);
+    setCurrentPage(data.currentPage || 1); // currentPage 업데이트
   };
 
-  const commentData = async () => {
-    const { data } = await axios.get(
-      `http://localhost:8000/api/search?content=${userName}&target=author&limit=10&page=2`
+  // 댓글단 글 데이터를 가져오는 함수
+  const commentData = async (page) => {
+    const response = await axios.get(
+      `http://localhost:8000/api/find-post-by-comment?limit=10&page=${page}`,
+      {
+        headers: {
+          nickName: `${author}`,
+        },
+      }
     );
+    const data = response.data;
     setUserData(data.data);
+    setPrevPage(data.prevPage);
+    setNextPage(data.nextPage);
+    setTotalPage(data.totalPage);
+    setCurrentPage(data.currentPage || 1); // currentPage 업데이트
   };
 
+  // 페이지네이션 버튼 클릭 시 호출되는 함수
+  const paginate = async (pageNumber) => {
+    if (selectedTab === "post") {
+      await postData(pageNumber);
+    } else if (selectedTab === "comment") {
+      await commentData(pageNumber);
+    }
+  };
+
+  // 페이지 이동을 위한 함수
+  const pageChange = async (url) => {
+    if (url) {
+      const { data } = await axios.get(url, {
+        headers: {
+          nickName: `${author}`,
+        },
+      });
+      setUserData(data.data);
+      setPrevPage(data.prevPage);
+      setNextPage(data.nextPage);
+      setTotalPage(data.totalPage);
+      setCurrentPage(data.currentPage || 1); // currentPage 업데이트
+    }
+  };
+
+  // 페이지 처음 로딩 시, '작성글' 탭을 기본으로 설정
   useEffect(() => {
-    postData();
+    postData(1); // 1페이지 로딩
   }, []);
-
   return (
     <div className="info-container">
       <CategoryCompo />
       <div className="info-list">
-        <h1 className="info-name">{userName}</h1>
+        <h1 className="info-name">{author}</h1>
         <div className="info-select">
           <button
             className={`select-post ${selectedTab === "post" ? "active" : ""}`}
             onClick={() => {
-              postData();
               setSelectedTab("post");
+              postData(1); // '작성글' 탭 클릭 시, 1페이지 데이터 로딩
             }}
           >
             작성글
@@ -50,20 +98,21 @@ const UserPage = () => {
               selectedTab === "comment" ? "active" : ""
             }`}
             onClick={() => {
-              commentData();
               setSelectedTab("comment");
+              commentData(1); // '댓글단 글' 탭 클릭 시, 1페이지 데이터 로딩
             }}
           >
             댓글단 글
           </button>
         </div>
+
         <div className="info-header">
           <span className="info-title">글 제목</span>
           <span className="info-date">작성일자</span>
         </div>
+
         {userData.map((item) => {
-          const date = item.createdAt.substring(0, 10);
-          const user = item.author;
+          const date = item.createdAt.substring(0, 10); // 날짜 포맷
           return (
             <div className="line-change" key={item.id}>
               <span onClick={() => navig(`/list-in/${item.id}`)}>
@@ -75,6 +124,17 @@ const UserPage = () => {
         })}
       </div>
       <UserInfoCompo />
+      <div className="down-banner">
+        <Pagination
+          postPerPage={postPerPage}
+          prevPage={prevPage}
+          nextPage={nextPage}
+          totalPage={totalPage}
+          paginate={paginate}
+          currentPage={currentPage}
+          pageChange={pageChange}
+        />
+      </div>
     </div>
   );
 };
