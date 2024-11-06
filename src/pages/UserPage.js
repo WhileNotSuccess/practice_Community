@@ -33,20 +33,31 @@ const UserPage = () => {
 
   // 댓글단 글 데이터를 가져오는 함수
   const commentData = async (page) => {
-    const response = await axios.get(
-      `http://localhost:8000/api/find-post-by-comment?limit=10&page=${page}`,
-      {
-        headers: {
-          nickName: `${author}`,
-        },
-      }
-    );
-    const data = response.data;
-    setUserData(data.data);
-    setPrevPage(data.prevPage);
-    setNextPage(data.nextPage);
-    setTotalPage(data.totalPage);
-    setCurrentPage(data.currentPage || 1); // currentPage 업데이트
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/find-post-by-comment?limit=10&page=${page}`,
+        {
+          headers: {
+            nickName: `${author}`,
+          },
+        }
+      );
+      // 댓글의 값이 들어온다면 정상적으로 띄우고
+      // 값이 없다면 빈배열 처리(사용자가 댓글을 달지 않으면 헤더값이 없어서 오류가 나기에 오류를   빈배열 처리)
+      const data = response.data || {};
+      setUserData(data.data || []);
+      setPrevPage(data.prevPage || "");
+      setNextPage(data.nextPage || "");
+      setTotalPage(data.totalPage || 0);
+      setCurrentPage(data.currentPage || 1); // currentPage 업데이트
+    } catch (error) {
+      // 에러 처리 (예: 네트워크 오류 등)
+      setUserData([]);
+      setPrevPage("");
+      setNextPage("");
+      setTotalPage(0);
+      setCurrentPage(1);
+    }
   };
 
   // 페이지네이션 버튼 클릭 시 호출되는 함수
