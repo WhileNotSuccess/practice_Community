@@ -13,6 +13,10 @@ export const Pagination = ({
   pageChange,
 }) => {
   const pageNumbers = [];
+
+  // 페이지네이션이 없을 경우, 페이지네이션을 렌더링하지 않음
+  if (totalPage === 0) return null;
+
   const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
   const endPage = Math.min(startPage + 9, totalPage);
 

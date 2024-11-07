@@ -14,10 +14,15 @@ const PostList = ({ list }) => {
     setUser(user);
   };
 
-  const closeMenu = (user) => {
+  const goToPage = (user) => {
     // 정보보기 창 닫기 함수
-    console.log(user);
-    // navig(`/`,{state:{author:user}}); user페이지 라우트 생기면 활성화
+
+    navig(`/user-page`, { state: user });
+    setUser(null);
+  };
+
+  const closeMenu = () => {
+    // 정보보기 창 닫기 함수
     setUser(null);
   };
 
@@ -52,7 +57,7 @@ const PostList = ({ list }) => {
           }}
         >
           <button onClick={closeMenu}>x</button>
-          <div className="menu-item" onClick={() => closeMenu(user)}>
+          <div className="menu-item" onClick={() => goToPage(user)}>
             정보보기
           </div>
         </div>

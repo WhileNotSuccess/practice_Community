@@ -5,29 +5,24 @@ import { CategoryCompo } from "../components/CategoryCompo";
 import { UserInfoCompo } from "../components/MainComp";
 import Pagination from "../components/Pagination";
 import PostList from "../components/PostList";
-import searchIcon from "../img/search.jpg";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import DownSearch from "../components/DownSearch";
 import { useAuth } from "../hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const category = useSelector((state) => state.category); // 카테고리
-  const currentPage = useSelector((state) => state.currentPage); // 현재 페이지
-  const target = useSelector((state) => state.target); // 검색 주제(제목, 내용, 작성자)
   const [posts, setPosts] = useState([]); // 메인에서 글 가져오기
+  const [currentPage, setCurrentPage] = useState(""); // 현재 페이지
   const [nextPage, setNextPage] = useState(""); // 다음 페이지
   const [prevPage, setPrevPage] = useState(""); // 이전 페이지
   const [postPerPage, setPostPerPage] = useState(10); // 페이지에 띄울 글 갯수
   const [totalPage, setTotalPage] = useState(0); // 총 페이지
   const [h_announce, setHAnnounce] = useState(true); // 공지 숨기기
   const [notion, setNotion] = useState([]); // 공지내용 가져오기
-  const [downSearchInput, setDownSearchInput] = useState(""); // 하단 검색창
-  const [searchInput, setSearchInput] = useState(downSearchInput); // 검색 입력값
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const fetchPosts = async (page) => {
     // 메인 페이지 글 가져오기
@@ -36,7 +31,7 @@ const Main = () => {
     `
     );
     setPosts(data.data);
-    dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+    setCurrentPage(data.currentPage);
     setNextPage(data.nextPage);
     setPrevPage(data.prevPage);
     setTotalPage(data.totalPage);
@@ -60,19 +55,12 @@ const Main = () => {
     fetchNotions();
   }, []);
 
-  useEffect(() => {
-    if (searchInput) {
-      navigate("/search-result", {
-        state: { searchInput, target },
-      });
-    }
-  }, [searchInput]); // 검색 입력값이 있을 때만 이동
-
+  // 페이지 변경 시 실제로 바뀌는 값
   const pageChange = async (url) => {
     if (url) {
       const { data } = await axios.get(url);
       setPosts(data.data);
-      dispatch({ type: "CURRENTPAGE_CHANGE", payload: data.currentPage });
+      setCurrentPage(data.currentPage);
       setNextPage(data.nextPage);
       setPrevPage(data.prevPage);
       setTotalPage(data.totalPage);
@@ -119,6 +107,7 @@ const Main = () => {
         {posts.length > 0 && <PostList list={posts} />}
       </div>
       <UserInfoCompo user={user} />
+
       <DownSearch />
 
       <div className="down-banner">

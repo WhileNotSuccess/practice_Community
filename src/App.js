@@ -16,6 +16,7 @@ import PostUpdate from "./pages/PostUpdate";
 import EmailVerify from "./pages/EmailVerify";
 import PasswordReset from "./pages/PasswordReset";
 import ForgotPassword from "./pages/ForgotPassword";
+import UserPage from "./pages/UserPage";
 const App = () => {
   return (
     <>
@@ -35,7 +36,7 @@ const App = () => {
         <Route path="/verify-email" Component={EmailVerify} />
         <Route path="/password-reset/:token" Component={PasswordReset} />
         <Route path="/forgot-password" Component={ForgotPassword} />
-
+        <Route path="/user-page" Component={UserPage} />
       </Routes>
     </>
   );
