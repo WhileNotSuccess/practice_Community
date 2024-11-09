@@ -35,7 +35,6 @@ const App = () => {
         <Route path="/verify-email" Component={EmailVerify} />
         <Route path="/password-reset/:token" Component={PasswordReset} />
         <Route path="/forgot-password" Component={ForgotPassword} />
-
       </Routes>
     </>
   );

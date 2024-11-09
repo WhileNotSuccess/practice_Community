@@ -129,6 +129,7 @@ const Post = () => {
             <option value={"자유게시판"}>자유게시판</option>
             <option value={"공지사항"}>공지사항</option>
             <option value={"축제게시판"}>축제게시판</option>
+            <option value={"조원소개"}>조원소개</option>
           </select>
           <input placeholder="제목" onChange={titlechange}></input>{" "}
         </div>
