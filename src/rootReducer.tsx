@@ -1,4 +1,19 @@
-const initialState = {
+interface State {
+  category: String;
+  categoryList: string[];
+  currentPage: number;
+  prevPage: string;
+  nextPage: string;
+  postPerPage: number;
+  totalPage: number;
+  target: string;
+}
+
+interface action {
+  type: string;
+  payload: any;
+}
+const initialState: State = {
   category: "자유게시판",
   categoryList: [],
   currentPage: 0,
@@ -9,7 +24,7 @@ const initialState = {
   target: "title",
 };
 
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (state: State = initialState, action: action) => {
   switch (action.type) {
     case "CATEGORYLIST_UPLOAD":
       return { ...state, categoryList: action.payload };
